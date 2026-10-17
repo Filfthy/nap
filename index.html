@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>const SINGLE_GAME = "nap";</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <!-- the game draws its own colours: phone browsers (Chrome's auto-darken, Samsung Internet's dark mode) must not darken it -->
+  <meta name="color-scheme" content="only light" />
+  <title>Nap! The classic trick-taking game</title>
+  <meta name="description" content="Nap! The classic trick-taking game: bid to take two tricks, three, four, or all five - go Nap! - against Napoleon, Wellington, Nelson and the people of their age, or the Infernal cast. For 3 to 5 players.">
+  <meta name="author" content="BugVictim">
+  <meta name="theme-color" content="#1e1208">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="bugvictim.svg">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Nap!">
+  <meta property="og:description" content="Nap! The classic trick-taking game: bid to take two tricks, three, four, or all five - go Nap! - against Napoleon, Wellington, Nelson and the people of their age, or the Infernal cast. For 3 to 5 players.">
+  <link rel="stylesheet" href="./gw.css?v=1">
+  <link rel="stylesheet" href="./oh.css?v=4">
+  <link rel="stylesheet" href="./bs.css?v=76">
+  <!-- the Infernal fonts load straight away, so nameplates are never drawn first in a stand-in font and then jump -->
+  <link rel="preload" href="fonts/manufacturing-consent.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/cinzel.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./bv-more.css?v=1">
+</head>
+<body class="style-infernal suits-infernal">
+<svg id="suit-symbols" width="0" height="0" style="position:absolute" aria-hidden="true"><defs><filter id="oh-gamma" color-interpolation-filters="sRGB"><feComponentTransfer><feFuncR type="gamma" exponent="1"/><feFuncG type="gamma" exponent="1"/><feFuncB type="gamma" exponent="1"/></feComponentTransfer></filter>
+    <!-- the Infernal suits (from Oh Hell): flame, trident, horns, pentagram -->
+    <symbol id="s-flame" viewBox="0 0 100 100">
+      <path fill-rule="evenodd" d="M50 98 C30 92 13 79 12 60 C11 46 18 37 24 30 C23 39 26 45 31 48 C29 34 35 19 50 4 C49 18 55 26 62 33 C64 26 66 21 71 16 C72 29 80 36 86 47 C92 59 88 78 74 89 C67 94 58 96 50 98 Z
+        M49 86 C39 83 33 75 34 66 C35 57 42 52 45 43 C49 52 47 59 52 64 C55 58 56 53 61 49 C66 58 68 66 65 74 C62 81 56 85 49 86 Z"/>
+    </symbol>
+    <!-- Trident: three barbed prongs on a curved head, a collar, and the shaft -->
+    <symbol id="s-trident" viewBox="0 0 100 100">
+      <path d="M50 0 L66 25 L57 22 L57 72 L43 72 L43 22 L34 25 Z
+        M20 6 L32 30 L27 28 L27 46 C27 59 37 66 50 66 C63 66 73 59 73 46 L73 28 L68 30 L80 6 L92 30 L86 28 L86 48 C86 70 70 80 50 80 C30 80 14 70 14 48 L14 28 L8 30 Z
+        M40 78 L60 78 C60 82 63 84 65 86 C62 88 58 89 57 90 L57 100 L43 100 L43 90 C42 89 38 88 35 86 C37 84 40 82 40 78 Z"/>
+    </symbol>
+    <!-- Horns: two long curved horns rising from a band -->
+    <symbol id="s-horns" viewBox="0 0 100 100">
+      <path d="M27 95 C11 86 6 64 9 43 C11 25 16 12 23 2 C20 17 19 33 22 47 C25 60 32 68 41 71 L59 71 C68 68 75 60 78 47 C81 33 80 17 77 2 C84 12 89 25 91 43 C94 64 89 86 73 95 C68 89 62 85 56 84 L44 84 C38 85 32 89 27 95 Z"/>
+    </symbol>
+    <!-- Pentagram: an inverted five-pointed star in a ring -->
+    <symbol id="s-pentagram" viewBox="0 0 100 100">
+      <path fill-rule="evenodd" d="M50 2 A48 48 0 1 1 49.99 2 Z M50 10 A40 40 0 1 0 50.01 10 Z"/>
+      <path fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="miter" stroke-miterlimit="10"
+        d="M50 83 L30.6 23.3 L81.38 60.2 L18.62 60.2 L69.4 23.3 Z"/>
+    </symbol>
+    <!-- PLACEHOLDER-SPIDERS (tools/make-placeholder-spiders.py) -->
+    <symbol id="sp-1" viewBox="0 0 100 140"><line x1="50" y1="0" x2="50" y2="52" stroke="#1c130c" stroke-width="1" /><g transform="translate(50 74) rotate(180) scale(1.15)"><polyline points="-3.0,-6.0 -11.4,-16.0 -26.4,-16.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.2,-10.4 -23.8,-22.7" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.2,-1.6 -28.2,-9.1" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -10.5,4.6 -25.4,3.3" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 11.4,-16.0 26.4,-16.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.2,-10.4 23.8,-22.7" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.2,-1.6 28.2,-9.1" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 10.5,4.6 25.4,3.3" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#1c130c"/><circle cx="0" cy="-8" r="6" fill="#1c130c"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/><path class="hl" d="M-3.5 2 L3.5 2 L0 8 Z M-3.5 14 L3.5 14 L0 8 Z"/></g></symbol>
+    <symbol id="sp-2" viewBox="0 0 100 140"><line x1="50" y1="0" x2="50" y2="140" stroke="#1c130c" stroke-width="1" /><g transform="translate(50 78) rotate(0) scale(1.15)"><polyline points="-3.0,-6.0 -8.5,-17.8 -20.8,-26.4" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -14.3,-12.5 -24.9,-23.1" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.6,-2.6 -30.0,-6.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -9.5,5.3 -24.3,7.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 8.5,-17.8 20.8,-26.4" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 14.3,-12.5 24.9,-23.1" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.6,-2.6 30.0,-6.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 9.5,5.3 24.3,7.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#1c130c"/><circle cx="0" cy="-8" r="6" fill="#1c130c"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/><path class="hl" d="M-3.5 2 L3.5 2 L0 8 Z M-3.5 14 L3.5 14 L0 8 Z"/></g></symbol>
+    <symbol id="sp-3" viewBox="0 0 100 140"><line x1="32" y1="40" x2="63.9" y2="28.4" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="32" y1="40" x2="65.9" y2="37.8" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="32" y1="40" x2="65.2" y2="47.4" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="32" y1="40" x2="61.8" y2="56.4" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="32" y1="40" x2="56.0" y2="64.0" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="32" y1="40" x2="48.4" y2="69.8" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="32" y1="40" x2="39.4" y2="73.2" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="32" y1="40" x2="29.8" y2="73.9" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="32" y1="40" x2="20.4" y2="71.9" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><polyline points="38.4,37.7 38.8,39.6 38.6,41.5 38.0,43.3 36.8,44.8 35.3,46.0 33.5,46.6 31.6,46.8 29.7,46.4" fill="none" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><polyline points="44.8,35.3 45.6,39.1 45.3,42.9 43.9,46.5 41.6,49.6 38.5,51.9 34.9,53.3 31.1,53.6 27.3,52.8" fill="none" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><polyline points="51.2,33.0 52.4,38.7 51.9,44.4 49.9,49.8 46.4,54.4 41.8,57.9 36.4,59.9 30.7,60.4 25.0,59.2" fill="none" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><polyline points="57.6,30.7 59.1,38.2 58.6,45.9 55.8,53.1 51.2,59.2 45.1,63.8 37.9,66.6 30.2,67.1 22.7,65.6" fill="none" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><polyline points="63.9,28.4 65.9,37.8 65.2,47.4 61.8,56.4 56.0,64.0 48.4,69.8 39.4,73.2 29.8,73.9 20.4,71.9" fill="none" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><path class="hl-line" d="M66 100 C55 80 45 70 38 56" fill="none" stroke-width="1.6"/><g transform="translate(68 102) rotate(-25) scale(1.0)"><polyline points="-3.0,-6.0 -14.3,-12.5 -29.2,-11.2" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.8,-8.3 -27.3,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.8,-3.7 -28.8,-11.2" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -13.0,2.4 -27.9,1.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 14.3,-12.5 29.2,-11.2" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.8,-8.3 27.3,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.8,-3.7 28.8,-11.2" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 13.0,2.4 27.9,1.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#1c130c"/><circle cx="0" cy="-8" r="6" fill="#1c130c"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/><path class="hl" d="M-3.5 2 L3.5 2 L0 8 Z M-3.5 14 L3.5 14 L0 8 Z"/></g></symbol>
+    <symbol id="sp-4" viewBox="0 0 100 140"><circle class="hl" cx="25.6" cy="50.5" r="5"/><circle class="hl" cx="39.0" cy="38.1" r="5"/><circle class="hl" cx="61.0" cy="38.1" r="5"/><circle class="hl" cx="74.4" cy="50.5" r="5"/><g transform="translate(50 100) rotate(0) scale(1.15)"><polyline points="-3.0,-6.0 -9.5,-17.3 -24.5,-17.3" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -13.0,-14.4 -27.4,-10.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.6,-2.6 -29.7,-7.8" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -10.5,4.6 -25.2,7.3" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 9.5,-17.3 24.5,-17.3" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 13.0,-14.4 27.4,-10.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.6,-2.6 29.7,-7.8" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 10.5,4.6 25.2,7.3" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#1c130c"/><circle cx="0" cy="-8" r="6" fill="#1c130c"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/><path class="hl" d="M-3.5 2 L3.5 2 L0 8 Z M-3.5 14 L3.5 14 L0 8 Z"/></g></symbol>
+    <symbol id="sp-5" viewBox="0 0 100 140"><line x1="0" y1="104" x2="100" y2="98" stroke="#1c130c" stroke-width="1.1"/><line class="hl-line" x1="12" y1="62" x2="88" y2="62" stroke-width="3" stroke-linecap="round"/><g transform="translate(50 82) rotate(0) scale(1.0)"><polyline points="-3.0,-6.0 -8.5,-17.8 -23.3,-20.4" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -14.3,-12.5 -23.9,-24.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.2,-1.6 -27.5,-10.2" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -10.5,4.6 -24.9,0.8" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 8.5,-17.8 23.3,-20.4" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 14.3,-12.5 23.9,-24.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.2,-1.6 27.5,-10.2" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 10.5,4.6 24.9,0.8" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#1c130c"/><circle cx="0" cy="-8" r="6" fill="#1c130c"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/><path class="hl" d="M-3.5 2 L3.5 2 L0 8 Z M-3.5 14 L3.5 14 L0 8 Z"/></g></symbol>
+    <symbol id="sp-6" viewBox="0 0 100 140"><line x1="30" y1="0" x2="38" y2="50" stroke="#1c130c" stroke-width="1" /><line x1="70" y1="0" x2="62" y2="50" stroke="#1c130c" stroke-width="1" /><line class="hl-line" x1="34" y1="50" x2="66" y2="50" stroke-width="3.2" stroke-linecap="round"/><g transform="translate(50 78) rotate(180) scale(1.1)"><polyline points="-3.0,-6.0 -14.3,-12.5 -23.9,-24.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.8,-8.3 -27.3,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -7.4,-18.2 -2.3,-32.3" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -0.7,-18.8 6.8,-31.8" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 14.3,-12.5 23.9,-24.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.8,-8.3 27.3,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 7.4,-18.2 2.3,-32.3" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 0.7,-18.8 -6.8,-31.8" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#1c130c"/><circle cx="0" cy="-8" r="6" fill="#1c130c"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/><path class="hl" d="M-3.5 2 L3.5 2 L0 8 Z M-3.5 14 L3.5 14 L0 8 Z"/></g></symbol>
+    <symbol id="sp-7" viewBox="0 0 100 140"><g transform="translate(70 60)"><ellipse cx="0" cy="0" rx="7" ry="10" fill="#3a2a1c"/><ellipse cx="-8" cy="-6" rx="7" ry="4" fill="none" stroke="#1c130c" stroke-width="0.8"/><ellipse cx="8" cy="-6" rx="7" ry="4" fill="none" stroke="#1c130c" stroke-width="0.8"/><path class="hl-line" d="M-8 -6 L8 -2 L-8 2 L8 6 L-8 10" fill="none" stroke-width="2"/></g><g transform="translate(42 92) rotate(30) scale(1.05)"><polyline points="-3.0,-6.0 -5.3,-18.8 -19.4,-23.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -11.4,-16.0 -26.1,-18.6" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.6,-2.6 -30.0,-6.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -10.5,4.6 -25.2,7.3" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 5.3,-18.8 19.4,-23.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 11.4,-16.0 26.1,-18.6" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.6,-2.6 30.0,-6.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 10.5,4.6 25.2,7.3" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#1c130c"/><circle cx="0" cy="-8" r="6" fill="#1c130c"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/><path class="hl" d="M-3.5 2 L3.5 2 L0 8 Z M-3.5 14 L3.5 14 L0 8 Z"/></g></symbol>
+    <symbol id="sp-8" viewBox="0 0 100 140"><line x1="78" y1="0" x2="60" y2="62" stroke="#1c130c" stroke-width="1" /><g transform="translate(54 82) rotate(-25) scale(1.1)"><polyline points="-3.0,-6.0 -14.3,-12.5 -29.2,-11.2" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.8,-8.3 -27.3,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.8,-3.7 -28.8,-11.2" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -13.0,2.4 -27.9,1.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 14.3,-12.5 29.2,-11.2" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.8,-8.3 27.3,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.8,-3.7 28.8,-11.2" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 13.0,2.4 27.9,1.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#1c130c"/><circle cx="0" cy="-8" r="6" fill="#1c130c"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/><rect class="hl" x="-7" y="0" width="14" height="14" rx="3"/><line x1="-6" y1="2" x2="6" y2="2" stroke="#1c130c" stroke-width="1"/></g></symbol>
+    <symbol id="sp-9" viewBox="0 0 100 140"><g transform="translate(50 122) rotate(0) scale(0.62)"><polyline points="-3.0,-6.0 -15.2,-10.4 -28.2,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -16.0,-7.1 -28.9,-14.6" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.8,-3.7 -29.9,-8.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -14.3,0.5 -29.3,0.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.2,-10.4 28.2,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 16.0,-7.1 28.9,-14.6" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.8,-3.7 29.9,-8.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 14.3,0.5 29.3,0.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#1c130c"/><circle cx="0" cy="-8" r="6" fill="#1c130c"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/></g><g transform="translate(50 100) rotate(0) scale(0.62)"><polyline points="-3.0,-6.0 -15.2,-10.4 -28.2,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -16.0,-7.1 -28.9,-14.6" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.8,-3.7 -29.9,-8.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -14.3,0.5 -29.3,0.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.2,-10.4 28.2,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 16.0,-7.1 28.9,-14.6" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.8,-3.7 29.9,-8.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 14.3,0.5 29.3,0.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#1c130c"/><circle cx="0" cy="-8" r="6" fill="#1c130c"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/></g><g transform="translate(50 78) rotate(0) scale(0.62)"><polyline points="-3.0,-6.0 -15.2,-10.4 -28.2,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -16.0,-7.1 -28.9,-14.6" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.8,-3.7 -29.9,-8.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -14.3,0.5 -29.3,0.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.2,-10.4 28.2,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 16.0,-7.1 28.9,-14.6" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.8,-3.7 29.9,-8.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 14.3,0.5 29.3,0.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#1c130c"/><circle cx="0" cy="-8" r="6" fill="#1c130c"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/></g><g transform="translate(50 56) rotate(0) scale(0.62)"><polyline points="-3.0,-6.0 -15.2,-10.4 -28.2,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -16.0,-7.1 -28.9,-14.6" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.8,-3.7 -29.9,-8.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -14.3,0.5 -29.3,0.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.2,-10.4 28.2,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 16.0,-7.1 28.9,-14.6" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.8,-3.7 29.9,-8.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 14.3,0.5 29.3,0.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#1c130c"/><circle cx="0" cy="-8" r="6" fill="#1c130c"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/></g><g transform="translate(50 34) rotate(0) scale(0.62)"><polyline points="-3.0,-6.0 -15.2,-10.4 -28.2,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -16.0,-7.1 -28.9,-14.6" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.8,-3.7 -29.9,-8.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -14.3,0.5 -29.3,0.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.2,-10.4 28.2,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 16.0,-7.1 28.9,-14.6" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.8,-3.7 29.9,-8.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 14.3,0.5 29.3,0.5" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#1c130c"/><circle cx="0" cy="-8" r="6" fill="#1c130c"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/><path class="hl" d="M-3.5 2 L3.5 2 L0 8 Z M-3.5 14 L3.5 14 L0 8 Z"/></g></symbol>
+    <symbol id="sp-10" viewBox="0 0 100 140"><line class="hl-line" x1="22" y1="50" x2="66" y2="86" stroke-width="2.4" stroke-linecap="round"/><line class="hl-line" x1="78" y1="50" x2="34" y2="86" stroke-width="2.4" stroke-linecap="round"/><line x1="50" y1="112" x2="25.6" y2="103.1" stroke="#1c130c" stroke-width="0.7" opacity="0.55"/><line x1="50" y1="112" x2="28.4" y2="97.5" stroke="#1c130c" stroke-width="0.7" opacity="0.55"/><line x1="50" y1="112" x2="32.6" y2="92.7" stroke="#1c130c" stroke-width="0.7" opacity="0.55"/><line x1="50" y1="112" x2="37.8" y2="89.0" stroke="#1c130c" stroke-width="0.7" opacity="0.55"/><line x1="50" y1="112" x2="43.7" y2="86.8" stroke="#1c130c" stroke-width="0.7" opacity="0.55"/><line x1="50" y1="112" x2="50.0" y2="86.0" stroke="#1c130c" stroke-width="0.7" opacity="0.55"/><line x1="50" y1="112" x2="56.3" y2="86.8" stroke="#1c130c" stroke-width="0.7" opacity="0.55"/><line x1="50" y1="112" x2="62.2" y2="89.0" stroke="#1c130c" stroke-width="0.7" opacity="0.55"/><line x1="50" y1="112" x2="67.4" y2="92.7" stroke="#1c130c" stroke-width="0.7" opacity="0.55"/><line x1="50" y1="112" x2="71.6" y2="97.5" stroke="#1c130c" stroke-width="0.7" opacity="0.55"/><line x1="50" y1="112" x2="74.4" y2="103.1" stroke="#1c130c" stroke-width="0.7" opacity="0.55"/><polyline points="43.9,109.8 44.6,108.4 45.7,107.2 46.9,106.3 48.4,105.7 50.0,105.5 51.6,105.7 53.1,106.3 54.3,107.2 55.4,108.4 56.1,109.8" fill="none" stroke="#1c130c" stroke-width="0.7" opacity="0.55"/><polyline points="37.8,107.6 39.2,104.7 41.3,102.3 43.9,100.5 46.9,99.4 50.0,99.0 53.1,99.4 56.1,100.5 58.7,102.3 60.8,104.7 62.2,107.6" fill="none" stroke="#1c130c" stroke-width="0.7" opacity="0.55"/><polyline points="31.7,105.3 33.8,101.1 37.0,97.5 40.8,94.8 45.3,93.1 50.0,92.5 54.7,93.1 59.2,94.8 63.0,97.5 66.2,101.1 68.3,105.3" fill="none" stroke="#1c130c" stroke-width="0.7" opacity="0.55"/><polyline points="25.6,103.1 28.4,97.5 32.6,92.7 37.8,89.0 43.7,86.8 50.0,86.0 56.3,86.8 62.2,89.0 67.4,92.7 71.6,97.5 74.4,103.1" fill="none" stroke="#1c130c" stroke-width="0.7" opacity="0.55"/><g transform="translate(50 56) rotate(0) scale(1.15)"><polyline points="-3.0,-6.0 -13.6,-13.5 -27.2,-7.1" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.6,-9.4 -29.2,-3.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.2,-1.6 -29.3,-6.7" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -10.5,4.6 -25.4,6.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 13.6,-13.5 27.2,-7.1" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.6,-9.4 29.2,-3.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.2,-1.6 29.3,-6.7" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 10.5,4.6 25.4,6.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#1c130c"/><circle cx="0" cy="-8" r="6" fill="#1c130c"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/><path class="hl" d="M-3.5 2 L3.5 2 L0 8 Z M-3.5 14 L3.5 14 L0 8 Z"/></g></symbol>
+    <symbol id="sp-11" viewBox="0 0 100 140"><line x1="50" y1="70" x2="98.0" y2="70.0" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="94.3" y2="88.4" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="83.9" y2="103.9" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="68.4" y2="114.3" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="50.0" y2="118.0" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="31.6" y2="114.3" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="16.1" y2="103.9" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="5.7" y2="88.4" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="2.0" y2="70.0" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="5.7" y2="51.6" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="16.1" y2="36.1" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="31.6" y2="25.7" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="50.0" y2="22.0" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="68.4" y2="25.7" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="83.9" y2="36.1" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="94.3" y2="51.6" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><line x1="50" y1="70" x2="98.0" y2="70.0" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><polyline points="58.0,70.0 57.4,73.1 55.7,75.7 53.1,77.4 50.0,78.0 46.9,77.4 44.3,75.7 42.6,73.1 42.0,70.0 42.6,66.9 44.3,64.3 46.9,62.6 50.0,62.0 53.1,62.6 55.7,64.3 57.4,66.9 58.0,70.0" fill="none" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><polyline points="66.0,70.0 64.8,76.1 61.3,81.3 56.1,84.8 50.0,86.0 43.9,84.8 38.7,81.3 35.2,76.1 34.0,70.0 35.2,63.9 38.7,58.7 43.9,55.2 50.0,54.0 56.1,55.2 61.3,58.7 64.8,63.9 66.0,70.0" fill="none" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><polyline points="74.0,70.0 72.2,79.2 67.0,87.0 59.2,92.2 50.0,94.0 40.8,92.2 33.0,87.0 27.8,79.2 26.0,70.0 27.8,60.8 33.0,53.0 40.8,47.8 50.0,46.0 59.2,47.8 67.0,53.0 72.2,60.8 74.0,70.0" fill="none" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><polyline points="82.0,70.0 79.6,82.2 72.6,92.6 62.2,99.6 50.0,102.0 37.8,99.6 27.4,92.6 20.4,82.2 18.0,70.0 20.4,57.8 27.4,47.4 37.8,40.4 50.0,38.0 62.2,40.4 72.6,47.4 79.6,57.8 82.0,70.0" fill="none" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><polyline points="90.0,70.0 87.0,85.3 78.3,98.3 65.3,107.0 50.0,110.0 34.7,107.0 21.7,98.3 13.0,85.3 10.0,70.0 13.0,54.7 21.7,41.7 34.7,33.0 50.0,30.0 65.3,33.0 78.3,41.7 87.0,54.7 90.0,70.0" fill="none" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><polyline points="98.0,70.0 94.3,88.4 83.9,103.9 68.4,114.3 50.0,118.0 31.6,114.3 16.1,103.9 5.7,88.4 2.0,70.0 5.7,51.6 16.1,36.1 31.6,25.7 50.0,22.0 68.4,25.7 83.9,36.1 94.3,51.6 98.0,70.0" fill="none" stroke="#1c130c" stroke-width="0.7" opacity="0.7"/><g transform="translate(50 74) rotate(0) scale(1.15)"><polyline points="-3.0,-6.0 -14.3,-12.5 -29.2,-11.2" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.8,-8.3 -27.3,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.8,-3.7 -28.8,-11.2" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -13.0,2.4 -27.9,1.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 14.3,-12.5 29.2,-11.2" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.8,-8.3 27.3,-17.9" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.8,-3.7 28.8,-11.2" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 13.0,2.4 27.9,1.0" fill="none" stroke="#1c130c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#1c130c"/><circle cx="0" cy="-8" r="6" fill="#1c130c"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/><path class="hl" d="M-3.5 2 L3.5 2 L0 8 Z M-3.5 14 L3.5 14 L0 8 Z"/><path class="hl" d="M-6 -13 L-6 -18 L-3 -15 L0 -20 L3 -15 L6 -18 L6 -13 Z"/></g></symbol>
+    <symbol id="sp-icon" viewBox="-30 -32 60 60"><g transform="translate(0 0) rotate(0) scale(1.0)"><polyline points="-3.0,-6.0 -14.3,-12.5 -29.2,-11.2" fill="none" stroke="#e9d8b0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.8,-8.3 -27.3,-17.9" fill="none" stroke="#e9d8b0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -15.8,-3.7 -28.8,-11.2" fill="none" stroke="#e9d8b0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="-3.0,-6.0 -13.0,2.4 -27.9,1.0" fill="none" stroke="#e9d8b0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 14.3,-12.5 29.2,-11.2" fill="none" stroke="#e9d8b0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.8,-8.3 27.3,-17.9" fill="none" stroke="#e9d8b0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 15.8,-3.7 28.8,-11.2" fill="none" stroke="#e9d8b0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.0,-6.0 13.0,2.4 27.9,1.0" fill="none" stroke="#e9d8b0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="0" cy="8" rx="9" ry="12" fill="#e9d8b0"/><circle cx="0" cy="-8" r="6" fill="#e9d8b0"/><circle cx="-2.4" cy="-10" r="1.2" fill="#f3e2b8"/><circle cx="2.4" cy="-10" r="1.2" fill="#f3e2b8"/><path fill="#c8261e" d="M-3.5 2 L3.5 2 L0 8 Z M-3.5 14 L3.5 14 L0 8 Z"/></g></symbol>
+    <!-- /PLACEHOLDER-SPIDERS -->
+  </defs></svg>
+  <div id="game-area">
+
+    <!-- Opponent seats are built by bs-app.js -->
+    <div id="seats"></div>
+
+    <!-- Deck: shown in the middle only while dealing -->
+    <div id="deck-slot"></div>
+
+    <!-- Which way the cards pass this hand (bottom left, beside your hand) -->
+    <div id="deck-area">
+      <div class="deck-col">
+        <div id="pass-caption">Passing</div>
+        <div id="pass-slot"></div>
+      </div>
+    </div>
+
+    <!-- Scoreboard -->
+    <div id="scoreboard">
+      <div id="round-label"></div>
+      <table id="score-table"></table>
+    </div>
+
+    <!-- Centre: cards played to the current trick -->
+    <div id="trick-area"></div>
+
+    <!-- Passing: choose three cards -->
+    <div id="bid-panel" style="display:none;">
+      <div id="bid-title"></div>
+      <div id="bid-buttons"></div>
+      <div id="bid-note"></div>
+    </div>
+
+    <!-- Human seat -->
+    <div id="player-hand"></div>
+    <div id="player-seat-info" class="seat-info">
+      <div class="name-label"></div>
+      <div class="seat-stats"></div>
+    </div>
+
+    <div id="controls">
+      <button id="btn-quit" type="button" class="icon-btn" aria-label="Quit this game" data-tip="Quit this game"></button>
+      <button id="btn-rules" type="button" class="icon-btn" aria-label="Rules" data-tip="Rules"></button>
+      <button id="btn-settings" type="button" class="icon-btn" aria-label="Settings" data-tip="Settings"></button>
+      <button id="btn-bright" type="button" class="icon-btn" aria-label="Brightness" data-tip="Brightness"></button>
+      <button id="btn-sound" type="button" class="icon-btn" aria-label="Sound" aria-pressed="true" data-tip="Sound: off"></button>
+      <button id="btn-fullscreen" type="button" class="icon-btn" aria-label="Fullscreen" aria-pressed="false" data-tip="Fullscreen"></button>
+    </div>
+  </div>
+
+  <!-- ROUND SUMMARY -->
+  <div id="end-overlay" style="display:none;">
+    <div id="end-panel">
+      <div class="end-header">
+        <div class="end-result" id="round-summary-title"></div>
+        <div class="end-sub" id="round-summary-sub"></div>
+      </div>
+      <div class="end-body">
+        <table class="end-table" id="round-summary-table"></table>
+      </div>
+      <div class="end-buttons">
+        <button id="btn-end-next" type="button">Next hand</button>
+      </div>
+    </div>
+  </div>
+
+<!-- SPLASH -->
+<div id="splash" role="button" tabindex="0" aria-label="Click to start">
+  <img class="splash-title splash-game-logo" src="img/logo-nap.webp?v=1" alt="Nap!">
+  <div class="logo-subtitle splash-subtitle">The classic trick-taking game</div>
+  <img src="bugvictim.svg" alt="BugVictim" class="splash-logo">
+  <div class="splash-credit">© BugVictim 2026</div>
+  <div class="splash-version">v1.0</div>
+  <div class="splash-start">Click to start</div>
+  <script>(function () { var s = document.getElementById("splash"); s.addEventListener("click", function () { if (window.__splashEarly || typeof controller !== "undefined") return; window.__splashEarly = true; var t = s.querySelector(".splash-start"); if (t) t.textContent = "Loading…"; }); })();</script>
+</div>
+
+<!-- SCORECARD -->
+<div id="scorecard" style="display:none;">
+  <div class="scorecard-panel">
+    <div class="scorecard-title">Scorecard</div>
+    <div class="scorecard-body"></div>
+    <div class="scorecard-buttons"><button type="button" id="btn-scorecard-close">Close</button></div>
+  </div>
+</div>
+
+<!-- PORTRAIT PHONES: ask to rotate -->
+<div id="rotate-prompt" aria-live="polite">
+  <div class="rotate-phone">📱</div>
+  <div class="rotate-title">Please turn your phone sideways</div>
+  <div class="rotate-text">Infernal Tricksters is played in landscape.</div>
+</div>
+
+<!-- IN-GAME POPUP: Settings (the Look & feel tab) or Rules (the How to play text), lent while it's open -->
+<div id="oh-modal" class="modal-shade" style="display:none;">
+  <div class="tut-offer-panel oh-modal-panel" role="dialog" aria-modal="true" aria-labelledby="oh-modal-title">
+    <div class="tut-offer-title" id="oh-modal-title"></div>
+    <div class="oh-modal-slot"></div>
+    <div class="tut-offer-buttons"><button type="button" id="oh-modal-close">Back to the game</button></div>
+  </div>
+</div>
+
+<!-- QUIT CONFIRM -->
+<div id="quit-confirm" class="modal-shade" style="display:none;">
+  <div class="tut-offer-panel">
+    <div class="tut-offer-title">Quit this game?</div>
+    <div class="tut-offer-text">The scores so far will be lost.</div>
+    <div class="tut-offer-buttons">
+      <button type="button" id="btn-quit-no">Keep playing</button>
+      <button type="button" id="btn-quit-yes">Quit</button>
+    </div>
+  </div>
+</div>
+
+<!-- FIRST-TIME TUTORIAL OFFER -->
+<div id="tut-offer" style="display:none;">
+  <div class="tut-offer-panel">
+    <div class="tut-offer-title">New to the table?</div>
+    <div class="tut-offer-text">Learn the rules in one quick hand.</div>
+    <div class="tut-offer-buttons">
+      <button type="button" id="btn-offer-skip">No thanks</button>
+      <button type="button" id="btn-offer-tutorial">Play the tutorial</button>
+    </div>
+  </div>
+</div>
+
+<!-- START OVERLAY -->
+<div id="start-overlay">
+  <div id="start-panel">
+
+    <div class="start-panel-header">
+      <div class="start-header">
+        <div class="start-title-img it-logo it-logo-small"><span>Infernal</span><span>Tricksters</span></div>
+        <img class="game-logo" id="game-logo" alt="" hidden>
+        <div class="it-game-name" id="game-name"></div>
+        <div class="it-game-tag" id="game-tag"></div>
+      </div>
+      <div class="start-logo-row start-credit-line">© BugVictim 2026</div>
+      <div class="look-preview" id="look-preview" aria-label="Preview of the table, cards and opponents"></div>
+    </div>
+
+    <div class="start-panel-content">
+
+    <div class="start-body">
+
+      <div class="start-field-row">
+        <label for="player-name-input">Your name</label>
+        <input id="player-name-input" type="text" value="Player" placeholder="Player" maxlength="20">
+      </div>
+
+      <div class="game-picker" id="game-picker" role="radiogroup" aria-label="Game"></div>
+
+      <div class="tab-bar" role="tablist">
+        <button type="button" class="tab-btn active" data-tab="game">Game</button>
+        <button type="button" class="tab-btn" data-tab="rules">Rules</button>
+        <button type="button" class="tab-btn" data-tab="look">Look &amp; feel</button>
+      </div>
+
+      <!-- GAME TAB -->
+      <div class="tab-pane active" data-pane="game">
+        <div class="opt-row">
+          <div class="opt-label">Players</div>
+          <div class="seg" role="radiogroup"><label><input type="radio" name="players" value="3"><span>3</span></label><label><input type="radio" name="players" value="4" checked><span>4</span></label><label><input type="radio" name="players" value="5"><span>5</span></label><label data-tip="Random number of players (3–5)"><input type="radio" name="players" value="random"><span>🎲</span></label></div>
+        </div>
+        <div class="opt-row">
+          <div class="opt-label">Opponents</div>
+          <div class="seg" role="radiogroup"><label data-tip="Easy: careless"><input type="radio" name="opponent" value="easy" checked><span>Lost souls</span></label><label data-tip="Medium: they know the tricks"><input type="radio" name="opponent" value="medium"><span>Imps</span></label><label data-tip="Hard: they think ahead"><input type="radio" name="opponent" value="hard"><span>Hellhounds</span></label></div>
+        </div>
+        <div class="opt-row">
+          <div class="opt-label">Seats</div>
+          <div class="seat-picks" id="seat-picks"></div>
+        </div>
+        <div class="opt-row">
+          <div class="opt-label">Length</div>
+          <div class="seg" role="radiogroup"><label data-tip="Play until someone reaches the rulebook's score (200 with 3 players, 150 with 4, 120 with 5)"><input type="radio" name="length" value="full" checked><span>Standard</span></label><label data-tip="Half the score: a shorter game"><input type="radio" name="length" value="short"><span>Short</span></label></div>
+        </div>
+        <div class="opt-row">
+          <div class="opt-label">First deal</div>
+          <div class="seg" role="radiogroup"><label><input type="radio" name="firstdeal" value="player"><span>You</span></label><label><input type="radio" name="firstdeal" value="random" checked><span>Random</span></label><label><input type="radio" name="firstdeal" value="opponent"><span>Opponent</span></label></div>
+        </div>
+        <div class="round-summary-line" id="round-summary-line"></div>
+        <div class="opt-row opt-row-end">
+          <button id="btn-instructions" type="button">How to play</button>
+        </div>
+      </div>
+
+      <!-- RULES TAB: the standard rules, or house rules (each explained under its row; they apply from the next game) -->
+      <div class="tab-pane" data-pane="rules">
+        <div id="rules-rows"></div>
+        <div class="opt-row opt-row-end">
+          <span class="rules-when" id="rules-when"></span>
+          <button id="btn-rules-standard" type="button" data-tip="Back to the standard rules">Standard rules</button>
+          <button id="btn-instructions-2" type="button">How to play</button>
+        </div>
+      </div>
+
+      <!-- LOOK TAB -->
+      <div class="tab-pane" data-pane="look">
+        <div class="opt-row">
+          <div class="opt-label">Theme</div>
+          <div class="seg seg-themes" role="radiogroup"><label data-tip="Demons and the damned, the Infernal deck, in the Cave"><input type="radio" name="theme" value="infernal"><span>Infernal</span></label><label data-tip="Napoleon and his age: Napoleonic courts, the Imperial back, the Empire table"><input type="radio" name="theme" value="napoleonic"><span>Napoleonic</span></label><label data-tip="An ordinary pack on green baize"><input type="radio" name="theme" value="classic"><span>Classic</span></label><label class="theme-custom" data-tip="Your own mix: change anything under Customise"><input type="radio" name="theme" value="custom" disabled><span>Custom</span></label></div>
+        </div>
+        <details class="look-custom" id="look-custom">
+          <summary>Customise: table, cards, back and cast</summary>
+        <div class="opt-row">
+          <div class="opt-label">Table</div>
+          <div class="seg seg-tables" role="radiogroup">
+            <label data-tip="A shadowy cave strewn with cobwebs, its spiders crawling about"><input type="radio" name="table" value="cave" checked><span class="sw sw-cave">Cave</span></label>
+            <label data-tip="Hearts' table: mahogany with an anatomical heart in marquetry, in candlelight"><input type="radio" name="table" value="heart"><span class="sw sw-heart">Heart</span></label>
+            <label data-tip="An Empire table: mahogany with Napoleon's portrait in marquetry, in candlelight"><input type="radio" name="table" value="empire"><span class="sw sw-empire">Empire</span></label>
+            <label data-tip="Waterloo: the cuirassiers charge the British squares, in drifting gunsmoke (Félix Philippoteaux, 1874)"><input type="radio" name="table" value="waterloo"><span class="sw sw-waterloo">Waterloo</span></label>
+            <label data-tip="Napoleon's retreat from Moscow, in falling snow (Adolph Northen, 1851)"><input type="radio" name="table" value="retreat"><span class="sw sw-retreat">Retreat</span></label>
+            <label data-tip="Green baize"><input type="radio" name="table" value="green"><span class="sw sw-green">Green</span></label>
+            <label data-tip="Hellfire red felt"><input type="radio" name="table" value="red"><span class="sw sw-red">Red</span></label>
+            <label data-tip="Midnight blue felt"><input type="radio" name="table" value="blue"><span class="sw sw-blue">Blue</span></label>
+            <label data-tip="Walnut table"><input type="radio" name="table" value="walnut"><span class="sw sw-walnut">Walnut</span></label>
+            <label data-tip="Mahogany table"><input type="radio" name="table" value="mahogany"><span class="sw sw-mahogany">Mahogany</span></label>
+            <label data-tip="Worn tavern table"><input type="radio" name="table" value="tavern"><span class="sw sw-tavern">Tavern</span></label>
+            <label data-tip="Dark marble"><input type="radio" name="table" value="marble"><span class="sw sw-marble">Marble</span></label>
+            <label data-tip="Soul sand: the damned groan beneath the table"><input type="radio" name="table" value="souls"><span class="sw sw-souls">Souls</span></label>
+          </div>
+        </div>
+        <div class="opt-row">
+          <div class="opt-label">Style</div>
+          <div class="seg" role="radiogroup"><label data-tip="Hearts, diamonds, clubs and spades, with the standard court cards"><input type="radio" name="deckstyle" value="standard"><span>Standard</span></label><label data-tip="The same suits, with Napoleonic court cards: France on spades, Britain on hearts, Russia on diamonds, Austria on clubs"><input type="radio" name="deckstyle" value="napoleonic"><span>Napoleonic</span></label><label data-tip="The same suits, with painted court figures"><input type="radio" name="deckstyle" value="painted"><span>Painted</span></label><label data-tip="Flames, tridents, horns and pentagrams: the Infernal deck"><input type="radio" name="deckstyle" value="infernal"><span>Infernal</span></label></div>
+        </div>
+        <div class="opt-row">
+          <div class="opt-label">Cast</div>
+          <div class="seg" role="radiogroup"><label data-tip="Demons, gods and the damned"><input type="radio" name="cast" value="infernal"><span>Infernal</span></label><label data-tip="Napoleon, Wellington, Nelson and the people of their wars"><input type="radio" name="cast" value="napoleonic"><span>Napoleonic</span></label></div>
+        </div>
+        <div class="opt-row" id="row-colours">
+          <div class="opt-label">Colours</div>
+          <div class="seg" role="radiogroup"><label data-tip="Hearts red, diamonds blue, clubs green, spades black"><input type="radio" name="suits" value="four"><span><b class="sw4 h">♥</b><b class="sw4 d">♦</b><b class="sw4 c">♣</b><b class="sw4 s">♠</b> Four colours</span></label><label data-tip="Hearts and diamonds red, clubs and spades black"><input type="radio" name="suits" value="two"><span>Red &amp; black</span></label></div>
+        </div>
+        <div class="opt-row">
+          <div class="opt-label">Card back</div>
+          <div class="seg seg-backs" role="radiogroup">
+            <label data-tip="Black Spider"><input type="radio" name="cardback" value="spider" checked><span class="bk bk-spider"></span></label>
+            <label data-tip="Napoleon crossing the Alps"><input type="radio" name="cardback" value="napoleon"><span class="bk bk-napoleon"></span></label>
+            <label data-tip="Imperial: Napoleon's bees in a laurel wreath, on crimson"><input type="radio" name="cardback" value="imperial"><span class="bk bk-imperial"></span></label>
+            <label data-tip="Imperial: Napoleon's bees in a laurel wreath, on the Empire's green"><input type="radio" name="cardback" value="imperial-green"><span class="bk bk-imperial-green"></span></label>
+            <label data-tip="Infernal"><input type="radio" name="cardback" value="infernal"><span class="bk bk-infernal"></span></label>
+            <label data-tip="Hellfire"><input type="radio" name="cardback" value="hellfire"><span class="bk bk-hellfire"></span></label>
+            <label data-tip="BugVictim"><input type="radio" name="cardback" value="bugvictim"><span class="bk bk-bugvictim"></span></label>
+            <label data-tip="Classic blue"><input type="radio" name="cardback" value="classic-blue"><span class="bk bk-classic-blue"></span></label>
+            <label data-tip="Classic red"><input type="radio" name="cardback" value="classic-red"><span class="bk bk-classic-red"></span></label>
+          </div>
+        </div>
+        </details>
+        <div class="opt-row">
+          <div class="opt-label">Speed</div>
+          <div class="seg" role="radiogroup"><label><input type="radio" name="speed" value="normal" checked><span>Normal</span></label><label><input type="radio" name="speed" value="fast"><span>Fast</span></label></div>
+        </div>
+        <div class="opt-row">
+          <div class="opt-label">Portraits</div>
+          <div class="seg" role="radiogroup"><label data-tip="Your opponents breathe, blink and react as they play"><input type="radio" name="portraits" value="living" checked><span>Living</span></label><label data-tip="Still pictures"><input type="radio" name="portraits" value="still"><span>Still</span></label></div>
+        </div>
+      </div>
+
+    </div>
+    </div> <!-- Close start-panel-content -->
+
+    <!-- GAME RESULTS -->
+    <div id="results-panel" style="display:none;">
+      <div class="results-content">
+        <h2 id="results-winner"></h2>
+        <div id="results-subtitle"></div>
+        <div id="results-match-table" style="display:none;"></div>
+        <div class="results-buttons">
+          <button id="btn-close-results">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN BUTTONS -->
+    <div class="start-panel-footer">
+      <div class="start-buttons">
+        <div class="start-buttons-main">
+          <button id="btn-tutorial">Tutorial<br><small>learn in one hand</small></button>
+          <button id="btn-play">Play<br><small id="btn-play-sub"></small></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSTRUCTIONS -->
+    <div id="instructions-panel" style="display:none;">
+      <div class="instructions-content">
+      </div>
+
+      <div class="instructions-footer">
+        <button id="btn-instructions-done">Done</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+  <script src="./bs-core.js?v=8"></script>
+  <script src="./bs-tutorial.js?v=6"></script>
+  <script src="./bs-ai.js?v=5"></script>
+  <script src="./bv-more.js?v=1"></script>
+  <script src="./oh-souls.js?v=1"></script>
+  <script src="./bs-cave-map.js?v=2"></script>
+  <script src="./bs-cave.js?v=37"></script>
+  <script src="./it-retreat.js?v=25"></script>
+  <script src="./oh-music-player.js?v=2"></script>
+  <script src="./living-data.js?v=2"></script>
+  <script src="./living-data-nap.js?v=2"></script>
+  <script src="./living-portraits.js?v=2"></script>
+  <script src="./nap-rigs.js?v=2"></script>
+  <script src="./games/blackspider.js?v=1"></script>
+  <script src="./games/suits.js?v=6"></script>
+  <script src="./games/hearts.js?v=13"></script>
+  <script src="./games/spades.js?v=2"></script>
+  <script src="./games/nap.js?v=19"></script>
+  <script src="./games/sergeant.js?v=3"></script>
+  <script src="./games/registry.js?v=6"></script>
+  <script src="./bs-app.js?v=65"></script>
+  <script>
+    BVMore.init({ key: "black-spider", title: "Black Spider", others: ["oh-hell-extended", "drakeharbour", "german-whist", "artifact"],
+      shareText: "Dodge the Black Spiders. Play Black Spider.",
+      click: () => controller.sfxTick() });
+  </script>
+</body>
+</html>

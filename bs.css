@@ -1,0 +1,501 @@
+/* bs.css - Black Spider's own look, on top of Oh Hell's gw.css + oh.css (always the Infernal style). */
+
+:root {
+  --c-red: #b3221c; --c-blue: #16307a; --c-purple: #5e1f86; --c-green: #2c7a32; --c-black: #160e08;
+  /* the pictures' highlight, per colour (the real art's magenta areas) */
+  --hl-red: #c8261e; --hl-blue: #16307a; --hl-purple: #6a2a96; --hl-green: #2f8f39; --hl-black: #cbbd9c;
+}
+
+/* ---------------------------------------------------------------- card faces */
+.card.bs-card { --hl: var(--hl-black); --ink: var(--c-black); }
+.card.bs-card.c-red    { --hl: var(--hl-red);    --ink: var(--c-red); }
+.card.bs-card.c-blue   { --hl: var(--hl-blue);   --ink: var(--c-blue); }
+.card.bs-card.c-purple { --hl: var(--hl-purple); --ink: var(--c-purple); }
+.card.bs-card.c-green  { --hl: var(--hl-green);  --ink: var(--c-green); }
+.card.bs-card.c-black  { --hl: var(--hl-black);  --ink: var(--c-black); }
+/* the number, and its points underneath (bad points in dark red, good in green) */
+.card.bs-card .corner.bs-corner {
+  display: flex; flex-direction: column; align-items: center; left: 3.5cqw; top: 3cqw; width: 22cqw;
+  color: var(--ink); line-height: 0.95; z-index: 3;
+}
+body.suits-infernal .card.bs-card .corner.bs-corner .rank { font-family: "Cinzel", Georgia, serif; font-weight: 700; font-size: 25cqw; letter-spacing: -0.04em; }
+.card.bs-card .corner.bs-corner .pts {
+  margin-top: 1.5cqw; font: 700 13cqw/1 "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  padding: 0.6cqw 2.2cqw; border-radius: 6cqw; border: 0.9cqw solid currentColor; background: rgba(241, 220, 174, 0.75);
+}
+.card.bs-card .corner .pts.bad { color: #8e1712; }
+.card.bs-card .corner .pts.good { color: #1f6b2a; }
+/* the picture: a panel on the parchment, clear of the number */
+.card.bs-card .bs-art { inset: 6% 5% 5% 18%; display: flex; align-items: center; justify-content: center; }
+.card.bs-card .bs-art svg { width: 100%; height: 100%; overflow: visible; }
+.card.bs-card .bs-art .hl { fill: var(--hl); }
+.card.bs-card .bs-art .hl-line { stroke: var(--hl); fill: none; }
+/* a Black Spider: a thin red glow round its edge */
+.card.bs-card.black-spider { box-shadow: 0 0 calc(4px * var(--card-scale)) rgba(200, 30, 18, 0.6), 0 calc(3px * var(--card-scale)) calc(5px * var(--card-scale)) rgba(0, 0, 0, 0.5); }
+/* (Oh Hell's wear layer is drawn over the picture panel; keep it subtle on these) */
+body.suits-infernal .card.bs-card[data-wear] .bs-art::after { opacity: calc(var(--wear) * 0.6); }
+
+/* the cards passed to you, lifted until you play your first card; the cards you're picking to pass */
+#player-hand .card.received { --sel-lift: -13%; filter: drop-shadow(0 0 4px #ffd54a); }
+#player-hand .card.pass-pick { --sel-lift: -24% !important; --hover-scale: 1; filter: drop-shadow(0 0 5px #ff7a3a) drop-shadow(0 0 2px #ff7a3a); }
+
+/* ---------------------------------------------------------------- the table */
+/* which way the cards pass (Oh Hell's trump box) */
+.pass-dir { display: flex; flex-direction: column; align-items: center; gap: 0.1em; color: #f1dcae; text-shadow: 0 0 2px #000, 0 1px 3px #000; }
+.pass-dir span { font-size: calc(34px * var(--card-scale)); line-height: 1; }
+.pass-dir b { font: 600 calc(14px * var(--card-scale)) "Cormorant Garamond", Georgia, serif; text-transform: uppercase; letter-spacing: 0.06em; }
+/* points taken this hand, by each name (a wax-seal coin, as Oh Hell's bids) */
+.taken-token {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 1.9em; height: 1.9em; padding: 0 0.3em;
+  border-radius: 1em; font: 700 0.95em "Palatino Linotype", Palatino, Georgia, serif; color: #f1dcae;
+  background: radial-gradient(circle at 38% 32%, #6b4a3e 0%, #3b2620 60%, #241510 100%); box-shadow: inset 0 0 0 2px rgba(184, 137, 63, 0.6);
+}
+.taken-token.bad { background: radial-gradient(circle at 38% 32%, #9a2318 0%, #5e0f09 60%, #340604 100%); box-shadow: inset 0 0 0 2px #e0503a; }
+.taken-token.good { background: radial-gradient(circle at 38% 32%, #3f7a35 0%, #1f4a1a 60%, #10290d 100%); box-shadow: inset 0 0 0 2px #7fc46a; }
+.spider-count { margin-left: 0.25em; font-size: 0.95em; letter-spacing: -0.15em; filter: drop-shadow(0 0 2px #000); }
+
+/* the passing panel (Oh Hell's bid panel) */
+#bid-panel .pass-btn { font: 700 calc(16px * var(--card-scale)) "Cormorant Garamond", Georgia, serif; padding: 0.5em 1.3em; }
+#bid-panel .pass-btn:disabled { opacity: 0.55; cursor: default; }
+#bid-title b { color: #ffd27a; }
+
+/* a short message (a refused card, a Black Spider taken) */
+.capture-toast.bs-toast { max-width: min(80vw, 640px); text-align: center; line-height: 1.3; }
+
+/* the round summary: what each player took */
+.end-table .taken-cell { white-space: nowrap; }
+
+/* ---------------------------------------------------------------- the title */
+.bs-logo { display: flex; align-items: center; justify-content: center; gap: 0.25em; font-family: "Manufacturing Consent", "Cinzel", serif;
+  color: #f1dcae; text-shadow: 0 0 2px #2b0700, 0 3px 0 #6b1d00, 0 0 22px rgba(255, 110, 20, 0.55); line-height: 1; }
+.bs-logo .bs-logo-spider { height: 1.4em; width: 1em; overflow: visible; --hl: #c8261e; }
+.bs-logo .bs-logo-spider line, .bs-logo .bs-logo-spider polyline { stroke: #f1dcae; }
+.bs-logo .bs-logo-spider ellipse, .bs-logo .bs-logo-spider circle:not([fill="#f3e2b8"]) { fill: #f1dcae; }
+.bs-logo .bs-logo-spider .hl { fill: #c8261e; }
+#splash .bs-logo { font-size: clamp(54px, 11vw, 150px); }
+#start-panel .bs-logo.start-title-img { font-size: clamp(34px, 5.2vw, 64px); width: auto; height: auto; max-height: none; }
+@media (orientation: landscape) and (max-height: 500px) {
+  #splash .bs-logo { font-size: clamp(40px, 15vh, 90px); }
+  #start-panel .bs-logo.start-title-img { font-size: 30px; }
+}
+.sp-icon { width: 1.05em; height: 1.05em; vertical-align: -0.18em; overflow: visible; filter: drop-shadow(0 0 1.5px rgba(241, 220, 174, 0.9)); }
+.spider-count .sp-icon { margin-right: -0.15em; }
+/* messages: leather and brass, like the other Infernal panels */
+.capture-toast.bs-toast {
+  background: linear-gradient(180deg, #2c160b 0%, #1d0d06 100%) !important; color: #f1dcae !important;
+  border: 1px solid #b8893f !important; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6) !important;
+  font: 600 calc(19px * var(--card-scale)) "Cormorant Garamond", Georgia, serif !important; padding: 0.55em 1.2em !important; border-radius: 8px !important;
+}
+.capture-toast.bs-toast .sp-icon { width: 1.3em; height: 1.3em; margin-right: 0.2em; }
+.spider-count .sp-icon { width: 1.35em; height: 1.35em; }
+/* the passing panel sits in the middle of the table, above your hand (you need to see the cards you're picking);
+   on phones it's a compact strip higher up */
+#bid-panel { top: 49%; }
+body[data-players="5"] #bid-panel { top: 51%; }
+@media (orientation: landscape) and (max-height: 500px) {
+  #bid-panel, body[data-players="5"] #bid-panel { top: 34%; gap: 4px; padding: 6px 12px; max-width: 52vw; }
+  #bid-panel #bid-title { font-size: 13px; text-align: center; }
+  #bid-panel .pass-btn { font-size: 13px; padding: 0.4em 1em; }
+  #bid-panel #bid-note { display: none; }
+  /* the cards you've picked rise well clear of the rest */
+}
+/* the spider picture (one design, recoloured): centred in the space right of the number, printed into the paper */
+.card.bs-card .bs-art { inset: 5% 4% 4% 4%; }
+.card.bs-card .bs-art img { position: static; width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+body.suits-infernal .card.bs-card .bs-art img { mix-blend-mode: normal; }
+
+/* the Black Spider card back (art/cardback.png): the default; it creases now and then like the Infernal back */
+body.back-spider .card.back { background: transparent url("back-spider.webp?v=2") center / 100% 100% no-repeat; border-color: transparent; }
+.seg-backs .bk-spider { background: transparent url("back-spider.webp?v=2") center / 100% 100% no-repeat !important; }
+body.back-spider .card.back[data-crease]::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 3;
+  background-position: center; background-size: 100% 100%; background-repeat: no-repeat; transform: scale(var(--crease-x, 1), var(--crease-y, 1));
+}
+#end-panel:has(.taken-cell) { min-width: min(92vw, 560px); }
+.end-table .taken-cell { padding-right: 1.2em; }
+/* the title (art/black-spider-logo-inward-thread.png) */
+#splash .bs-logo-img { width: min(78vw, 820px); height: auto; max-height: 52vh; object-fit: contain; filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.7)); }
+#start-panel .bs-logo-img.start-title-img { width: min(100%, 26em); height: auto; max-height: 9em; object-fit: contain; }
+@media (orientation: landscape) and (max-height: 500px) {
+  #splash .bs-logo-img { max-height: 46vh; }
+  #start-panel .bs-logo-img.start-title-img { max-height: 4.5em; }
+}
+
+/* the Cave table (bs-cave.js draws it on #cave-bg) */
+body.table-cave { background: transparent !important; --ui-rgb: 24, 16, 11; --ui-accent: #a87a52; --ui-accent-rgb: 168, 122, 82; --ui-accent-hi: #c0915f; --ui-soft: rgb(232, 196, 150); --ui-soft-rgb: 232, 196, 150; }
+html:has(body.table-cave) { background-color: #0c0806; }
+#cave-bg { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; display: none; }
+.seg-tables .sw-cave { background: radial-gradient(circle at 18% 22%, rgba(215,205,190,0.35) 0 1px, transparent 2px),
+  repeating-conic-gradient(from 0deg at 0 0, rgba(215,205,190,0.25) 0 1deg, transparent 1deg 12deg),
+  radial-gradient(ellipse at 50% 60%, #3a2a1e, #0c0806) !important; color: #e8d6b8 !important; }
+/* on the Cave the passing panel is just its outline over the picture, no shading: its words have a thin dark edge to read by */
+body.table-cave #bid-panel { background: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+body.table-cave #bid-panel #bid-title, body.table-cave #bid-panel #bid-note {
+  text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 1px 2px #000;
+}
+/* on the Cave the messages (a Black Spider taken...) are just words, so they don't blot out the queen's eyes */
+body.table-cave .capture-toast.bs-toast {
+  background: none !important; border-color: transparent !important; box-shadow: none !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 4px #000, 0 1px 3px #000;
+}
+/* ...and the round's end and the score table: their borders, no fill, words edged dark to read over the cave */
+body.table-cave #end-overlay, body.table-cave #scorecard, body.table-cave #end-panel, body.table-cave .scorecard-panel,
+body.table-cave .end-table, body.table-cave .end-table th, body.table-cave .end-table td, body.table-cave .end-table tr,
+body.table-cave .scorecard-panel table, body.table-cave .scorecard-panel th, body.table-cave .scorecard-panel td, body.table-cave .scorecard-panel tr {
+  background: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+}
+body.table-cave #end-panel, body.table-cave .scorecard-panel { text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 4px #000, 0 1px 3px #000; }
+/* Cormorant's figures default to old-style (a "1" like a small "I"): use full-height ones everywhere */
+body { font-variant-numeric: lining-nums; }
+/* the round summary and the scorecard do have a background on the Cave: dark, slightly see-through, no blur */
+body.table-cave #end-panel, body.table-cave .scorecard-panel { background: rgba(8, 5, 3, 0.72) !important; }
+/* the Rules tab: each choice explained underneath its row */
+.opt-note { margin: -0.15em 0 0.55em; padding-left: 0.2em; font-size: 0.86em; line-height: 1.3; opacity: 0.8; font-style: italic; }
+.seg-rules label { flex: 1 1 40%; }
+.seg-rules label span { white-space: nowrap; }
+.rules-when { margin-right: auto; align-self: center; font-size: 0.9em; opacity: 0.8; }
+#btn-rules-standard, #btn-instructions-2 { margin-left: 0.4em; font-size: 15px !important; padding: 0.35em 0.9em !important; min-height: 0 !important; height: auto !important; width: auto !important; flex: none !important; line-height: 1.2 !important; white-space: nowrap; }
+
+/* ---------------------------------------------------------------- Infernal Tricksters */
+/* the title (lettering, until there's a drawn logo) */
+.it-logo { display: flex; flex-direction: column; align-items: center; line-height: 0.92; font-family: "Manufacturing Consent", "Cinzel", serif;
+  color: #f1dcae; text-shadow: 0 0 2px #2b0700, 0 3px 0 #6b1d00, 0 0 24px rgba(255, 110, 20, 0.55); letter-spacing: 0.01em; }
+#splash .it-logo { font-size: clamp(56px, 10vw, 140px); }
+#splash .it-logo span:last-child { font-size: 0.82em; }
+.it-logo.it-logo-small { font-size: clamp(34px, 4.6vw, 60px); }
+.it-logo.it-logo-small span:last-child { font-size: 0.82em; }
+.it-game-name { margin-top: 0.35em; font: 600 clamp(17px, 1.6vw, 24px) "Cormorant Garamond", Georgia, serif; color: #e8b85a; text-align: center; letter-spacing: 0.04em; }
+@media (orientation: landscape) and (max-height: 500px) {
+  #splash .it-logo { font-size: clamp(40px, 14vh, 90px); }
+  .it-logo.it-logo-small { font-size: 28px; }
+  .it-game-name { font-size: 14px; margin-top: 0.15em; }
+}
+/* the game picker: one compact button per game (what it's about shows under the title, on the left) */
+.game-picker { display: flex; flex-wrap: wrap; gap: 0.3em; margin: 0 0 0.5em; }
+.game-picker label { flex: 1 1 auto; cursor: pointer; }
+.game-picker input { position: absolute; opacity: 0; pointer-events: none; }
+.game-picker span { display: block; text-align: center; padding: 0.3em 0.7em; border-radius: 8px; border: 1px solid rgba(184, 137, 63, 0.55);
+  background: rgba(40, 20, 10, 0.55); color: #f1dcae; font: 700 1em "Cormorant Garamond", Georgia, serif; letter-spacing: 0.02em; white-space: nowrap; }
+.game-picker small { display: none; }
+.game-picker input:checked + span { border-color: #e8b85a; box-shadow: 0 0 0 2px rgba(232, 184, 90, 0.7), 0 0 14px rgba(255, 120, 30, 0.35);
+  background: linear-gradient(180deg, rgba(90, 40, 12, 0.75), rgba(40, 16, 6, 0.75)); }
+.game-picker input:focus-visible + span { outline: 2px solid #e8b85a; outline-offset: 2px; }
+.it-game-tag { margin-top: 0.2em; font: italic 500 clamp(13px, 1.1vw, 16px) "Cormorant Garamond", Georgia, serif; color: #e8d6b8; opacity: 0.8; text-align: center; max-width: 22em; }
+@media (orientation: landscape) and (max-height: 500px) { .game-picker span { padding: 0.15em 0.5em; } .it-game-tag { display: none; } }
+/* the Rules tab: long labels wrap rather than run into their buttons */
+[data-pane="rules"] .opt-label { white-space: normal; max-width: 6.6em; line-height: 1.1; }
+/* (the game picker takes a row of the start panel's grid: the tab pages sit below the tabs) */
+#start-panel .start-body > .tab-pane { grid-row: 4; }
+/* the Rules tab: compact, and it scrolls rather than push the panel off a short screen */
+[data-pane="rules"] .seg-rules label { flex: 1 1 30%; }
+[data-pane="rules"] .seg-rules span { padding-top: 0.25em !important; padding-bottom: 0.25em !important; }
+[data-pane="rules"] .opt-row { margin-top: 0.15em; margin-bottom: 0.15em; }
+[data-pane="rules"] .opt-note { margin: 0 0 0.35em; font-size: 0.82em; }
+#start-panel .start-body > [data-pane="rules"] { max-height: calc(100vh - 230px); overflow-y: auto; overscroll-behavior: contain; padding-right: 0.3em; }
+
+/* the auction's words (Nap): Pass, 2, 3, Misère, 4, Nap... */
+#bid-buttons .bid-btn.bid-word { min-width: 3.2em; width: auto; padding-left: 0.6em; padding-right: 0.6em; }
+#bid-buttons .bid-row { flex-wrap: wrap; justify-content: center; }
+.pass-dir.trump-mark span { line-height: 1; }
+.pass-dir .suit-inline .sg, .pass-dir span .sg { width: 1em; height: 1em; }
+/* (Nap) a word bid by a name: Misère, Nap, Wellington, Blücher */
+.nap-word { display: inline-flex; align-items: center; padding: 0.1em 0.55em; border-radius: 0.5em; font: 700 0.9em "Cormorant Garamond", Georgia, serif;
+  color: #3a1206; background: linear-gradient(180deg, #f3dfb0, #d9b97a); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(90, 40, 12, 0.5); white-space: nowrap; }
+.nap-word.on-target { box-shadow: 0 0 0 2px #7fc46a, 0 1px 3px rgba(0, 0, 0, 0.6); }
+/* a player count this game can't be played with */
+.seg label.opt-off { opacity: 0.35; pointer-events: none; }
+/* (Nap) a player's counters: a little stack of coins and the count */
+.nap-coins { display: inline-flex; align-items: center; gap: 0.25em; font: 700 0.95em "Cormorant Garamond", Georgia, serif; color: #f1dcae; margin-right: 0.35em; }
+.nap-coins::before { content: ""; width: 1.05em; height: 1.05em; border-radius: 50%; flex: none;
+  background: radial-gradient(circle at 38% 32%, #f7d98a 0%, #c8962e 55%, #7a5414 100%); box-shadow: 0 2px 0 #5a3a0c, 0 4px 0 #c8962e, 0 5px 0 #5a3a0c, 0 1px 3px rgba(0,0,0,0.6); }
+
+/* ---------------------------------------------------------------- the ordinary deck in standard suits */
+/* four colours (the default): hearts red, diamonds blue, clubs green, spades black; or red and black */
+.card.std-card .s-heart { color: #b01e18; }
+.card.std-card .s-diamond { color: #1d4fae; }
+.card.std-card .s-club { color: #1d7a2e; }
+.card.std-card .s-spade { color: #1a120c; }
+body.suit-colours-2 .card.std-card .s-diamond { color: #b01e18; }
+body.suit-colours-2 .card.std-card .s-club { color: #1a120c; }
+.card.std-card .corner .suit .sg-std { font-size: 1.15em; line-height: 0.9; display: block; }
+.card.std-card .std-pip { position: absolute; transform: translate(-50%, -50%); font-size: 21cqw; line-height: 1; font-family: "Segoe UI Symbol", "DejaVu Sans", serif; }
+.card.std-card .std-pip.flip { transform: translate(-50%, -50%) rotate(180deg); }
+.card.std-card .std-pip.std-ace { font-size: 62cqw; }
+.card.std-card .face-icon { pointer-events: none; }
+/* With a white back (BugVictim, Classic) the standard suits are a clean white card as in any ordinary pack (the Goodall courts from court/, both indices, the
+   ornate ace of spades); the parchment, wear and creases are left off */
+body.suits-infernal .card.plain-card:not(.back) { background: #fdfcf8; border-color: #b9b4aa; isolation: auto; }
+body.suits-infernal .card.plain-card:not(.back) .corner { text-shadow: none; }
+.card.classic-card .corner { font-family: Georgia, "Times New Roman", Times, serif; font-weight: 700; }
+.card.classic-card .s-heart, body.suit-colours-2 .card.classic-card .s-diamond { color: #c8102e; }
+.card.classic-card .s-spade, body.suit-colours-2 .card.classic-card .s-club { color: #111; }
+.card.classic-card .royal-inset { position: absolute; inset: 13% 17.3%; border: 1px solid rgba(0, 0, 0, 0.35); border-radius: 2px; overflow: hidden; }
+.card.classic-card .royal-inset-img { display: block; width: 100%; height: 100%; }
+.card.classic-card .ace-spade-svg { position: absolute; left: 50%; top: 50%; width: 62%; height: 62%; transform: translate(-50%, -50%); object-fit: contain; }
+.sg-std { font-family: "Segoe UI Symbol", "DejaVu Sans", serif; font-style: normal; }
+.suit-inline .sg-std { display: inline-block; line-height: 1; }
+body.suit-style-standard .suit-inline.s-heart { color: #e0473c; }
+body.suit-style-standard .suit-inline.s-diamond { color: #6f9bef; }
+body.suit-style-standard .suit-inline.s-club { color: #5fbf6e; }
+body.suit-style-standard .suit-inline.s-spade { color: #f1dcae; }
+body.suit-colours-2 .suit-inline.s-diamond { color: #e0473c; }
+body.suit-colours-2 .suit-inline.s-club { color: #f1dcae; }
+/* the four-colour swatch on the Suits choice */
+.sw4 { font-weight: 400; margin-right: 0.05em; }
+.sw4.h { color: #b01e18; } .sw4.d { color: #1d4fae; } .sw4.c { color: #1d7a2e; } .sw4.s { color: #1a120c; }
+
+/* ---------------------------------------------------------------- the Retreat table (it-retreat.js draws it on #retreat-bg) */
+body.table-retreat { background: transparent !important; --ui-rgb: 18, 20, 26; --ui-accent: #9aa4b4; --ui-accent-rgb: 154, 164, 180; --ui-accent-hi: #b6c0cf; --ui-soft: rgb(220, 226, 236); --ui-soft-rgb: 220, 226, 236; }
+html:has(body.table-retreat) { background-color: #16181d; }
+.painted-bg { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; display: none; }
+.seg-tables .sw-retreat { background: radial-gradient(circle at 20% 30%, #fff 0 1px, transparent 2px), radial-gradient(circle at 70% 60%, #fff 0 1px, transparent 2px),
+  radial-gradient(circle at 45% 20%, #fff 0 1.5px, transparent 2.5px), linear-gradient(180deg, #4b5260 0%, #8c929c 55%, #dfe3e8 100%) !important; color: #1e2228 !important; text-shadow: 0 0 3px #fff !important; }
+/* (the panels, as on the Cave: clear of the picture) */
+/* on the Retreat the passing panel is just its outline over the picture, no shading: its words have a thin dark edge to read by */
+body.table-retreat #bid-panel { background: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+body.table-retreat #bid-panel #bid-title, body.table-retreat #bid-panel #bid-note {
+  text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 1px 2px #000;
+}
+/* on the Retreat the messages (a Black Spider taken...) are just words, so they don't blot out the queen's eyes */
+body.table-retreat .capture-toast.bs-toast {
+  background: none !important; border-color: transparent !important; box-shadow: none !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 4px #000, 0 1px 3px #000;
+}
+/* ...and the round's end and the score table: their borders, no fill, words edged dark to read over the cave */
+body.table-retreat #end-overlay, body.table-retreat #scorecard, body.table-retreat #end-panel, body.table-retreat .scorecard-panel,
+body.table-retreat .end-table, body.table-retreat .end-table th, body.table-retreat .end-table td, body.table-retreat .end-table tr,
+body.table-retreat .scorecard-panel table, body.table-retreat .scorecard-panel th, body.table-retreat .scorecard-panel td, body.table-retreat .scorecard-panel tr {
+  background: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+}
+body.table-retreat #end-panel, body.table-retreat .scorecard-panel { text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 4px #000, 0 1px 3px #000; }
+/* the round summary and the scorecard do have a background on the Retreat: dark, slightly see-through, no blur */
+body.table-retreat #end-panel, body.table-retreat .scorecard-panel { background: rgba(8, 5, 3, 0.72) !important; }
+/* ---------------------------------------------------------------- the Waterloo table */
+body.table-waterloo { background: transparent !important; --ui-rgb: 26, 20, 12; --ui-accent: #b89a5e; --ui-accent-rgb: 184, 154, 94; --ui-accent-hi: #ccb074; --ui-soft: rgb(236, 222, 190); --ui-soft-rgb: 236, 222, 190; }
+html:has(body.table-waterloo) { background-color: #1e1912; }
+.seg-tables .sw-waterloo { background: radial-gradient(ellipse at 30% 70%, rgba(230,226,215,0.8) 0 18%, transparent 40%), linear-gradient(180deg, #b9b3a2 0%, #9a8f72 45%, #5c6b33 60%, #8a2a1e 78%, #3b2a1a 100%) !important; color: #1e160c !important; text-shadow: 0 0 3px #f1e8d0 !important; }
+/* (the panels, as on the Cave: clear of the picture) */
+/* on the Retreat the passing panel is just its outline over the picture, no shading: its words have a thin dark edge to read by */
+body.table-waterloo #bid-panel { background: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+body.table-waterloo #bid-panel #bid-title, body.table-waterloo #bid-panel #bid-note {
+  text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 1px 2px #000;
+}
+/* on the Retreat the messages (a Black Spider taken...) are just words, so they don't blot out the queen's eyes */
+body.table-waterloo .capture-toast.bs-toast {
+  background: none !important; border-color: transparent !important; box-shadow: none !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 4px #000, 0 1px 3px #000;
+}
+/* ...and the round's end and the score table: their borders, no fill, words edged dark to read over the cave */
+body.table-waterloo #end-overlay, body.table-waterloo #scorecard, body.table-waterloo #end-panel, body.table-waterloo .scorecard-panel,
+body.table-waterloo .end-table, body.table-waterloo .end-table th, body.table-waterloo .end-table td, body.table-waterloo .end-table tr,
+body.table-waterloo .scorecard-panel table, body.table-waterloo .scorecard-panel th, body.table-waterloo .scorecard-panel td, body.table-waterloo .scorecard-panel tr {
+  background: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+}
+body.table-waterloo #end-panel, body.table-waterloo .scorecard-panel { text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 4px #000, 0 1px 3px #000; }
+/* the round summary and the scorecard do have a background on the Retreat: dark, slightly see-through, no blur */
+body.table-waterloo #end-panel, body.table-waterloo .scorecard-panel { background: rgba(8, 5, 3, 0.72) !important; }
+/* ---------------------------------------------------------------- the Empire table */
+/* (Hearts) the heart table: the Empire mahogany with the user's marquetry heart (body.table-empire is added with it) */
+.seg-tables .sw-heart { background: url("img/heart-medallion.webp") center / 62% no-repeat, url("table-mahogany.jpg") center / 200% !important; color: #f6e2b8 !important; }
+body.table-empire { background: transparent !important; --ui-rgb: 30, 14, 6; --ui-accent: #c8963f; --ui-accent-rgb: 200, 150, 63; --ui-accent-hi: #dcae58; --ui-soft: rgb(240, 214, 168); --ui-soft-rgb: 240, 214, 168; }
+html:has(body.table-empire) { background-color: #2a160c; }
+.seg-tables .sw-empire { background: radial-gradient(circle at 50% 50%, #1c0d06 0 18%, #d8a85c 19% 23%, transparent 24%), url("table-mahogany.jpg") center / 200% !important; color: #f6e2b8 !important; }
+/* (the panels, as on the Cave: clear of the picture) */
+/* on the Retreat the passing panel is just its outline over the picture, no shading: its words have a thin dark edge to read by */
+body.table-empire #bid-panel { background: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+body.table-empire #bid-panel #bid-title, body.table-empire #bid-panel #bid-note {
+  text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 1px 2px #000;
+}
+/* on the Retreat the messages (a Black Spider taken...) are just words, so they don't blot out the queen's eyes */
+body.table-empire .capture-toast.bs-toast {
+  background: none !important; border-color: transparent !important; box-shadow: none !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 4px #000, 0 1px 3px #000;
+}
+/* ...and the round's end and the score table: their borders, no fill, words edged dark to read over the cave */
+body.table-empire #end-overlay, body.table-empire #scorecard, body.table-empire #end-panel, body.table-empire .scorecard-panel,
+body.table-empire .end-table, body.table-empire .end-table th, body.table-empire .end-table td, body.table-empire .end-table tr,
+body.table-empire .scorecard-panel table, body.table-empire .scorecard-panel th, body.table-empire .scorecard-panel td, body.table-empire .scorecard-panel tr {
+  background: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+}
+body.table-empire #end-panel, body.table-empire .scorecard-panel { text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 4px #000, 0 1px 3px #000; }
+/* the round summary and the scorecard do have a background on the Retreat: dark, slightly see-through, no blur */
+body.table-empire #end-panel, body.table-empire .scorecard-panel { background: rgba(8, 5, 3, 0.72) !important; }
+/* the tables: rows of four, all the same width (a short last row isn't stretched) */
+.seg-tables label { flex: 0 0 calc((100% - 3 * 0.3em) / 4) !important; }
+.seg-tables .sw { padding-left: 0.2em !important; padding-right: 0.2em !important; white-space: nowrap; }
+.credits { font-size: 0.9em; opacity: 0.85; }
+
+/* Nap: the bid panel sits low and compact, in the gap above your hand, clear of the middle of the table (where the
+   Empire table's portrait is) */
+body.game-nap #bid-panel { top: 63.5% !important; padding: 4px 14px !important; gap: 4px !important; }
+body.game-nap #bid-panel #bid-title { font-size: calc(17px * var(--card-scale)); }
+body.game-nap #bid-panel #bid-note:empty { display: none; }
+body.game-nap #bid-buttons .bid-btn.bid-word { padding-top: 0.15em; padding-bottom: 0.15em; min-height: 0; }
+body.game-nap #bid-buttons .bid-row { flex-wrap: nowrap; gap: 0.3em; }
+body.game-nap #bid-buttons .bid-btn.bid-word { min-width: 2.6em; padding-left: 0.45em; padding-right: 0.45em; }
+
+
+/* (Nap) the counter numbers: a dark edge to read over any table */
+.nap-coins { text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 1px 2px #000; }
+
+/* the Napoleon card back (art/napback.png): Nap's own */
+body.back-napoleon .card.back { background: transparent url("back-napoleon.webp?v=11") center / 100% 100% no-repeat; border-color: transparent; }
+.seg-backs .bk-napoleon { background: transparent url("back-napoleon.webp?v=11") center / 100% 100% no-repeat !important; }
+/* the Imperial back: Napoleon's bees in a laurel wreath on crimson, a gold-on-blue border (the user's art/napback2.png) */
+body.back-imperial .card.back { background: transparent url("back-imperial.webp?v=4") center / 100% 100% no-repeat; border-color: transparent; }
+.seg-backs .bk-imperial { background: transparent url("back-imperial.webp?v=4") center / 100% 100% no-repeat !important; }
+body.back-imperial-green .card.back { background: transparent url("back-imperial-green.webp?v=2") center / 100% 100% no-repeat; border-color: transparent; }
+.seg-backs .bk-imperial-green { background: transparent url("back-imperial-green.webp?v=2") center / 100% 100% no-repeat !important; }
+/* (the Empire and heart tables) the middle panel keeps a dark backing: its words would sit on the pale laurels, ring
+   and vessels of the inlay */
+body.table-empire #bid-panel { background: rgba(22, 9, 4, 0.66) !important; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45) !important; backdrop-filter: blur(3px) !important; -webkit-backdrop-filter: blur(3px) !important; }
+/* ---------------------------------------------------------------- the Game tab's Seats row: who sits where (a face
+   and a name per seat, ? for random), and the picker of the cast's faces that opens under it */
+.seat-picks { display: flex; flex-wrap: wrap; gap: 0.35em; align-items: stretch; }
+.seat-pick, .seat-picker .spk {
+  display: flex; flex-direction: column; align-items: center; gap: 0.1em; min-width: 4.6em; padding: 0.3em 0.35em 0.25em;
+  border-radius: 8px; border: 1px solid rgba(var(--ui-accent-rgb), 0.45); background: rgba(0, 0, 0, 0.25);
+  color: #fdf6e3; font: inherit; cursor: pointer; line-height: 1.1;
+}
+.seat-pick:hover, .seat-picker .spk:hover:not(:disabled) { background: rgba(var(--ui-accent-rgb), 0.15); }
+.seat-pick.picking, .seat-picker .spk.on { outline: 3px solid var(--ui-accent); outline-offset: 1px; }
+.sp-face {
+  width: 2.6em; height: 2.6em; border-radius: 50%; background: rgba(0, 0, 0, 0.35) center / cover no-repeat;
+  display: flex; align-items: center; justify-content: center; font-size: 1.15em; font-weight: 700; color: var(--ui-accent-hi);
+}
+.sp-name { font-size: 0.82em; text-align: center; line-height: 1.05; }
+.sp-pos { font-size: 0.68em; opacity: 0.65; white-space: nowrap; }
+.seat-all-random {
+  align-self: center; padding: 0.38em 0.7em; border-radius: 8px; border: 1px solid rgba(var(--ui-accent-rgb), 0.45);
+  background: rgba(0, 0, 0, 0.25); color: #fdf6e3; font: inherit; font-size: 0.9em; cursor: pointer; white-space: nowrap;
+}
+.seat-all-random:disabled { opacity: 0.35; cursor: default; }
+.seat-picker {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(5.4em, 1fr)); gap: 0.35em;
+  margin: -0.3em 0 0.8em; padding: 0.5em; border-radius: 10px; border: 1px solid rgba(var(--ui-accent-rgb), 0.5);
+  background: rgba(10, 4, 2, 0.6); max-height: 15em; overflow-y: auto;
+}
+.seat-picker .spk:disabled { opacity: 0.3; cursor: default; }
+/* ---------------------------------------------------------------- the Napoleonic cast's nameplates: polished brass
+   plaques, the name engraved in black Bodoni (the Didone type of Napoleon's Empire and Regency England) - for yours
+   and theirs alike, whenever the opponents are the Napoleonic cast */
+@font-face { font-family: "Bodoni Moda"; src: url("fonts/bodoni-moda.woff2") format("woff2"); font-weight: 400 900; font-display: swap; }
+body.style-infernal.cast-napoleonic .seat-info .name-label {
+  font-family: "Bodoni Moda", "Bodoni 72", "Bodoni MT", Didot, Georgia, serif; font-weight: 700; letter-spacing: 0.01em;
+  color: #120c04 !important; text-shadow: 0 1px 0 rgba(255, 240, 190, 0.55);
+  background: linear-gradient(180deg, #fff1b8 0%, #e8c45c 18%, #c99a2e 48%, #a87a1c 52%, #d9b048 78%, #f3d77a 100%);
+  border: 1px solid #5e420c; border-radius: 5px;
+  box-shadow: inset 0 1px 0 #fff6cf, inset 0 -1px 0 #7a5512, inset 0 0 0 3px rgba(94, 66, 12, 0.35), 0 2px 5px rgba(0, 0, 0, 0.6);
+}
+@media not all and (max-height: 520px) {
+  body.style-infernal.cast-napoleonic .seat-info .name-label { font-family: "Bodoni Moda", "Bodoni 72", "Bodoni MT", Didot, Georgia, serif; font-weight: 700; font-size: calc(17px * var(--card-scale)); letter-spacing: 0; padding-left: 0.6em; padding-right: 0.6em; }
+}
+body.style-infernal.cast-napoleonic .seat-info .name-label.long-name { font-size: 0.86em; }
+@media not all and (max-height: 520px) {
+  body.style-infernal.cast-napoleonic .seat-info .name-label.long-name { font-size: calc(14.5px * var(--card-scale)); }
+}
+/* whose turn: a slow glint of candlelight across the brass, not the Infernal ember */
+body.style-infernal.cast-napoleonic .seat-info .name-label.turn-glow { animation: brassPlate 1.4s ease-in-out infinite; }
+@keyframes brassPlate {
+  0%, 100% { box-shadow: inset 0 1px 0 #fff6cf, inset 0 -1px 0 #7a5512, inset 0 0 0 3px rgba(94, 66, 12, 0.35), 0 2px 5px rgba(0, 0, 0, 0.6), 0 0 4px rgba(255, 214, 120, 0.35); }
+  50% { box-shadow: inset 0 1px 0 #fff6cf, inset 0 -1px 0 #7a5512, inset 0 0 0 3px rgba(94, 66, 12, 0.35), 0 2px 5px rgba(0, 0, 0, 0.6), 0 0 14px rgba(255, 214, 120, 0.85); }
+}
+/* in the Napoleonic style the fronts' parchment is better kept: the same eight papers with their ageing at 15%
+   (stains, scorching and spots against each paper's own middle tone), like the Imperial backs */
+body.suits-infernal.deck-napoleonic .card:not(.back)[data-paper="0"] { background-image: url("img/parchment-card-kept-0.webp"); }
+body.suits-infernal.deck-napoleonic .card:not(.back)[data-paper="1"] { background-image: url("img/parchment-card-kept-1.webp"); }
+body.suits-infernal.deck-napoleonic .card:not(.back)[data-paper="2"] { background-image: url("img/parchment-card-kept-2.webp"); }
+body.suits-infernal.deck-napoleonic .card:not(.back)[data-paper="3"] { background-image: url("img/parchment-card-kept-3.webp"); }
+body.suits-infernal.deck-napoleonic .card:not(.back)[data-paper="4"] { background-image: url("img/parchment-card-kept-4.webp"); }
+body.suits-infernal.deck-napoleonic .card:not(.back)[data-paper="5"] { background-image: url("img/parchment-card-kept-5.webp"); }
+body.suits-infernal.deck-napoleonic .card:not(.back)[data-paper="6"] { background-image: url("img/parchment-card-kept-6.webp"); }
+body.suits-infernal.deck-napoleonic .card:not(.back)[data-paper="7"] { background-image: url("img/parchment-card-kept-7.webp"); }
+/* ---------------------------------------------------------------- (Nap) the winning bidder's bid wears a gold laurel
+   wreath for the whole hand (img/laurel-wreath.svg), so it's plain at a glance who is playing alone */
+.bid-token.laurel, .nap-word.laurel { position: relative; overflow: visible; }
+.bid-token.laurel::after, .nap-word.laurel::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 2.7em; height: 2.7em; transform: translate(-50%, -50%);
+  background: url("img/laurel-wreath.svg") center / contain no-repeat; pointer-events: none; z-index: -1;   /* (behind the bid) */
+  filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.7));
+}
+.nap-word.laurel::after { width: calc(100% + 1.8em); height: 2.5em; background-size: 100% 100%; }
+/* the Napoleonic cast's bids: brass medals - a gilt disc with a fine raised rim, the bid in black Bodoni - and the
+   word bids (Misère, Nap...) on little brass tabs, matching the nameplates */
+body.style-infernal.cast-napoleonic .bid-token {
+  font-family: "Bodoni Moda", "Bodoni 72", Didot, Georgia, serif; font-weight: 700; color: #120c04 !important;
+  border-radius: 50% !important; text-shadow: 0 1px 0 rgba(255, 240, 190, 0.55) !important; padding-top: 0;
+  background: radial-gradient(circle at 36% 30%, #fff4c4 0%, #ecc860 26%, #c39332 58%, #8a6216 100%) !important;
+  box-shadow: inset 0 0 0 1.5px #5e420c, inset 0 0 0 3.5px rgba(255, 240, 190, 0.55), inset 0 0 0 4.5px rgba(94, 66, 12, 0.6), 0 2px 4px rgba(0, 0, 0, 0.7) !important;
+}
+body.style-infernal.cast-napoleonic .bid-token::before { display: none; }   /* (no wax seal) */
+body.style-infernal.cast-napoleonic .bid-token.empty { background: rgba(30, 20, 8, 0.55) !important; box-shadow: inset 0 0 0 2px rgba(201, 161, 78, 0.55) !important; color: rgba(241, 220, 174, 0.75) !important; text-shadow: none !important; }
+body.style-infernal.cast-napoleonic .bid-token.revealed.on-target { box-shadow: inset 0 0 0 1.5px #5e420c, inset 0 0 0 3.5px rgba(255, 240, 190, 0.55), inset 0 0 0 4.5px rgba(94, 66, 12, 0.6), 0 0 10px rgba(255, 214, 120, 0.95), 0 2px 4px rgba(0, 0, 0, 0.7) !important; }
+body.style-infernal.cast-napoleonic .bid-token.revealed.over { background: radial-gradient(circle at 36% 30%, #b39a78 0%, #7d6542 55%, #4a3a22 100%) !important; color: #1e140a !important; }
+body.style-infernal.cast-napoleonic .nap-word {
+  font-family: "Bodoni Moda", "Bodoni 72", Didot, Georgia, serif; font-weight: 700; color: #120c04; border-radius: 4px;
+  text-shadow: 0 1px 0 rgba(255, 240, 190, 0.55); border: 1px solid #5e420c;
+  background: linear-gradient(180deg, #fff1b8 0%, #e8c45c 18%, #c99a2e 48%, #a87a1c 52%, #d9b048 78%, #f3d77a 100%);
+  box-shadow: inset 0 1px 0 #fff6cf, inset 0 -1px 0 #7a5512, 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+body.style-infernal.cast-napoleonic .nap-word.on-target { box-shadow: inset 0 1px 0 #fff6cf, inset 0 -1px 0 #7a5512, 0 0 9px rgba(255, 214, 120, 0.95); }
+/* (Nap) the trump panel: the contract (who bid what) on a line above the trump suit */
+.trump-mark .nap-contract { display: block; font: italic 600 1.3em "Cormorant Garamond", Georgia, serif; letter-spacing: 0.02em; white-space: nowrap; margin-bottom: 0.15em; opacity: 0.9; }
+/* the Standard style on parchment: the classic courts printed into the paper, the indices without the parchment glow */
+body.suits-infernal .card.classic-card:not(.plain-card) .royal-inset { border-color: rgba(60, 35, 15, 0.45); }
+body.suits-infernal .card.classic-card:not(.plain-card) .royal-inset-img { mix-blend-mode: multiply; }
+body.suits-infernal .card.classic-card:not(.plain-card) .ace-spade-svg { mix-blend-mode: multiply; }
+/* ---------------------------------------------------------------- the Look & feel tab: Theme, the Customise fold, and
+   the preview that takes over the left column while the tab is open (what you're getting: the table, an opponent and
+   their bid, the backs, a hand, and you) */
+.seg-themes .theme-custom { display: none; }
+.seg-themes .theme-custom.shown { display: block; }
+.seg-themes input:disabled + span { cursor: default; }
+.look-custom { margin: 0 0 0.6em; }
+.look-custom > summary { cursor: pointer; font-weight: 700; opacity: 0.85; margin: 0.1em 0 0.7em; list-style: none; }
+.look-custom > summary::before { content: "▸ "; display: inline-block; width: 1em; transition: transform 0.15s; }
+.look-custom[open] > summary::before { transform: rotate(90deg); }
+.look-preview { display: none; }
+#start-panel.look-open .look-preview {
+  display: grid; grid-template-rows: auto 1fr auto; gap: 0.5em; position: relative; overflow: hidden;
+  margin: 0.4em 0 0; padding: 0.6em 0.9em 0.7em 4.6em; border-radius: 12px; min-height: 16em;
+  box-shadow: inset 0 0 0 1px rgba(var(--ui-accent-rgb), 0.5), inset 0 0 40px rgba(0, 0, 0, 0.55), 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+#start-panel.look-open .start-header, #start-panel.look-open .start-credit-line { display: none; }
+.look-preview .lp-row { display: flex; align-items: center; min-width: 0; }
+.look-preview .lp-opp { justify-content: space-between; padding-top: 1.6em; gap: 0.8em; }
+.look-preview .lp-you { justify-content: flex-start; padding-top: 1.9em; }
+.look-preview .seat-info { position: static !important; display: flex; flex-direction: row; align-items: center; gap: 0.6em; transform: none !important; }
+.look-preview .seat-stats { width: auto !important; min-height: 0; }
+.look-preview .lp-cards { gap: 1em; justify-content: center; }
+.look-preview { --card-scale: 0.85; font-size: 14px; }
+.look-preview .card { position: relative !important; width: 4.5em !important; height: 6.3em !important; container-type: inline-size; flex: none; margin: 0; left: auto !important; top: auto !important; }
+.look-preview .lp-backs { display: flex; }
+.look-preview .lp-backs { transform: scale(0.8); transform-origin: right center; }
+.look-preview .lp-backs .card + .card { margin-left: -3em; transform: rotate(7deg); }
+.look-preview .lp-hand { display: flex; }
+.look-preview .lp-hand .card { margin-left: -2.2em; }
+.look-preview .lp-hand .card:first-child { margin-left: 0; }
+.look-preview .lp-hand .card:nth-child(1) { transform: rotate(-10deg) translateY(0.35em); }
+.look-preview .lp-hand .card:nth-child(2) { transform: rotate(-5deg) translateY(0.1em); }
+.look-preview .lp-hand .card:nth-child(4) { transform: rotate(5deg) translateY(0.1em); }
+.look-preview .lp-hand .card:nth-child(5) { transform: rotate(10deg) translateY(0.35em); }
+.look-preview .name-label .portrait { width: calc(84px * var(--card-scale) * var(--pk, 1)) !important; }
+/* the preview on a phone: a smaller scene, and More games and Share step aside while it's open */
+@media (max-height: 520px) {
+  #start-panel.look-open .look-preview { font-size: 8px; --card-scale: 0.5; min-height: 0; padding: 0.4em 0.6em 0.5em 4.2em; gap: 0.2em; }
+  #start-panel.look-open .look-preview .lp-opp { padding-top: 1.2em; }
+  #start-panel.look-open .look-preview .lp-you { padding-top: 1em; }
+  #start-panel.look-open .start-panel-footer .bv-friends, #start-panel.look-open .start-panel-footer .bv-share { display: none; }
+}
+/* a game's own title logo (Nap: the bicorne, the cards and the gold "Nap!"), with its subtitle under it */
+#start-panel .game-logo { display: block; width: min(100%, 24em); height: auto; margin: 0 auto 0.1em; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.6)); }
+#start-panel .game-logo[hidden], #start-panel .it-logo[hidden] { display: none !important; }
+#start-panel .it-game-name.game-subtitle { font: italic 600 1.35em "Cormorant Garamond", Georgia, serif; letter-spacing: 0.01em; color: #f1dcae; margin-top: 0.1em; }
+@media (max-height: 520px) { #start-panel .game-logo { width: min(100%, 15em); } #start-panel .it-game-name.game-subtitle { font-size: 1.05em; } }
+/* a one-game release (dist/nap): no game picker; its own logo on the click-to-start screen */
+body.single-game #game-picker { display: none; }
+#splash .splash-game-logo { display: block; width: min(78vw, 46em); max-height: 52vh; height: auto; object-fit: contain; margin: 0 auto 0.2em; filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.7)); }
