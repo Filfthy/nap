@@ -2682,12 +2682,27 @@ window.addEventListener("resize", () => {
 // must match exactly what the cards and oh.css ask for (including any ?v=). The current style's art comes first.
 const CARD_ART_KEEP = [];
 function preloadCardArt() {
-  const list = ["back-spider.webp?v=2"];
-  for (let n = 1; n <= 11; n++) for (const c of ["red", "blue", "purple", "green", "black"]) list.push(`img/spider-${n}-${c}.webp`);
-  for (let i = 0; i < 8; i++) list.push(`img/parchment-card-${i}.webp`);
-  list.push("img/parchment-card.webp?v=3");
-  for (let i = 0; i < 8; i++) list.push(`img/crease-${i}.webp?v=2`);
-  for (let i = 0; i < 6; i++) list.push(`img/wear-${i}.webp`);
+  // every card picture the game can show, fetched and decoded in the background so a face never draws late (on the
+  // web each is a separate download): first what the game and look in use need, then all the rest
+  const STD = ["spades", "hearts", "diamonds", "clubs"], INF = ["pentagrams", "flames", "tridents", "horns"], SL = ["S", "H", "D", "C"];
+  const sets = {
+    nap: () => ["J", "Q", "K"].flatMap(r => STD.map(s => `img/nap/${r}-${s}.webp?v=3`)).concat([0, 1, 2, 3, 4, 5, 6, 7].map(i => `img/parchment-card-kept-${i}.webp`)),
+    painted: () => ["J", "Q", "K"].flatMap(r => STD.map(s => `img/std/${r}-${s}.webp?v=3`)),
+    standard: () => ["J", "Q", "K"].flatMap(r => SL.map(s => `court/${r}${s}.svg`)).concat(["spade.svg"]),
+    infernal: () => ["A", "J", "Q", "K"].flatMap(r => INF.map(s => `img/inf-${r}-${s}.webp`))
+      .concat([2, 3, 4, 5, 6, 7, 8, 9, 10].flatMap(r => INF.map(s => `img/infpips/${r}-${s}.svg?v=2`))),
+    spider: () => { const l = []; for (let n = 1; n <= 11; n++) for (const c of ["red", "blue", "purple", "green", "black"]) l.push(`img/spider-${n}-${c}.webp`); return l; },
+    // the backs, at the addresses the stylesheets use (so they're the same downloads)
+    backs: () => ["back-imperial-green.webp?v=2", "back-imperial.webp?v=4", "back-napoleon.webp?v=11", "back-spider.webp?v=2",
+      "back-infernal.webp?v=6", "back-hellfire.webp", "back-classic-blue.svg", "back-classic-red.svg", "back.svg"],
+    paper: () => [0, 1, 2, 3, 4, 5, 6, 7].map(i => `img/parchment-card-${i}.webp`).concat(["img/parchment-card.webp?v=3"],
+      [0, 1, 2, 3, 4, 5, 6, 7].map(i => `img/crease-${i}.webp?v=2`), [0, 1, 2, 3, 4, 5].map(i => `img/wear-${i}.webp`)),
+  };
+  const style = typeof DECK_STYLE !== "undefined" ? DECK_STYLE : "standard";
+  const gid = typeof controller !== "undefined" ? controller.gameId : "";
+  const first = gid === "blackspider" ? ["spider"] : [style === "napoleonic" ? "nap" : style];
+  const order = first.concat(["backs", "paper"], ["nap", "standard", "painted", "infernal", "spider"].filter(k => !first.includes(k)));
+  const list = [...new Set(order.flatMap(k => sets[k]()))];
   // a few at a time, so the first ones needed aren't queued behind everything else
   let next = 0;
   const one = () => {
@@ -2700,7 +2715,7 @@ function preloadCardArt() {
     img.src = list[next++];
     CARD_ART_KEEP.push(img);       // kept, so the decoded pictures stay ready
   };
-  for (let k = 0; k < 6; k++) one();
+  for (let k = 0; k < 8; k++) one();
 }
 if (document.readyState === "complete") setTimeout(preloadCardArt, 0);
 else window.addEventListener("load", () => setTimeout(preloadCardArt, 0));
