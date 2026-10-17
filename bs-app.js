@@ -1865,7 +1865,7 @@ class GameController {
     lengthRadios.forEach(r => { r.checked = (r.value === this.length); });
     // Table surface (applied immediately, remembered). The Souls table to begin with.
     // (each game has its own table, remembered: its default to begin with - the Cave, or Nap's Retreat)
-    const TABLES = ["cave", "heart", "empire", "waterloo", "retreat", "green", "red", "blue", "green-crest", "red-crest", "blue-crest", "green-print", "red-print", "blue-print", "walnut", "mahogany", "tavern", "marble", "souls"];
+    const TABLES = ["cave", "heart", "empire", "waterloo", "retreat", "green", "red", "blue", "green-print", "red-print", "blue-print", "walnut", "mahogany", "tavern", "marble", "souls"];
     const applyTable = (t) => {
       TABLES.forEach(x => document.body.classList.remove("table-" + x));
       document.body.classList.add("table-" + t);
