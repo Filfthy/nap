@@ -18,7 +18,7 @@
   <meta property="og:description" content="Nap! The classic trick-taking game: bid to take two tricks, three, four, or all five - go Nap! - against Napoleon, Wellington, Nelson and the people of their age, or the Infernal cast. For 3 to 5 players.">
   <link rel="stylesheet" href="./gw.css?v=1">
   <link rel="stylesheet" href="./oh.css?v=4">
-  <link rel="stylesheet" href="./bs.css?v=76">
+  <link rel="stylesheet" href="./bs.css?v=77">
   <!-- the Infernal fonts load straight away, so nameplates are never drawn first in a stand-in font and then jump -->
   <link rel="preload" href="fonts/manufacturing-consent.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/cinzel.woff2" as="font" type="font/woff2" crossorigin>
@@ -263,8 +263,8 @@
           <div class="opt-label">Theme</div>
           <div class="seg seg-themes" role="radiogroup"><label data-tip="Demons and the damned, the Infernal deck, in the Cave"><input type="radio" name="theme" value="infernal"><span>Infernal</span></label><label data-tip="Napoleon and his age: Napoleonic courts, the Imperial back, the Empire table"><input type="radio" name="theme" value="napoleonic"><span>Napoleonic</span></label><label data-tip="An ordinary pack on green baize"><input type="radio" name="theme" value="classic"><span>Classic</span></label><label class="theme-custom" data-tip="Your own mix: change anything under Customise"><input type="radio" name="theme" value="custom" disabled><span>Custom</span></label></div>
         </div>
-        <details class="look-custom" id="look-custom">
-          <summary>Customise: table, cards, back and cast</summary>
+        <div class="look-custom" id="look-custom">
+          <div class="look-custom-head">Or choose each part yourself</div>
         <div class="opt-row">
           <div class="opt-label">Table</div>
           <div class="seg seg-tables" role="radiogroup">
@@ -309,7 +309,7 @@
             <label data-tip="Classic red"><input type="radio" name="cardback" value="classic-red"><span class="bk bk-classic-red"></span></label>
           </div>
         </div>
-        </details>
+        </div>
         <div class="opt-row">
           <div class="opt-label">Speed</div>
           <div class="seg" role="radiogroup"><label><input type="radio" name="speed" value="normal" checked><span>Normal</span></label><label><input type="radio" name="speed" value="fast"><span>Fast</span></label></div>

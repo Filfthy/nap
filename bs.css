@@ -455,9 +455,7 @@ body.suits-infernal .card.classic-card:not(.plain-card) .ace-spade-svg { mix-ble
 .seg-themes .theme-custom.shown { display: block; }
 .seg-themes input:disabled + span { cursor: default; }
 .look-custom { margin: 0 0 0.6em; }
-.look-custom > summary { cursor: pointer; font-weight: 700; opacity: 0.85; margin: 0.1em 0 0.7em; list-style: none; }
-.look-custom > summary::before { content: "▸ "; display: inline-block; width: 1em; transition: transform 0.15s; }
-.look-custom[open] > summary::before { transform: rotate(90deg); }
+.look-custom-head { font-size: 0.85em; font-style: italic; opacity: 0.75; margin: 0.1em 0 0.6em; padding-top: 0.6em; border-top: 1px solid rgba(var(--ui-accent-rgb), 0.3); }
 .look-preview { display: none; }
 #start-panel.look-open .look-preview {
   display: grid; grid-template-rows: auto 1fr auto; gap: 0.5em; position: relative; overflow: hidden;
