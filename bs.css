@@ -513,3 +513,8 @@ html:has(body.table-blue-print) { background-color: #05102a; }
 .seg-tables .sw-blue-print { background: url("img/baize-emblem-print-cream.webp") center 30% / 150% no-repeat, url("baize-blue.jpg") center / 200% !important; background-blend-mode: hard-light, normal !important; }
 /* the Napoleonic ace of spades (Napoleon's bee in an ornate spade), on parchment or white card */
 .card .face-icon .ace-spade-svg.nap-ace { position: absolute; left: 50%; top: 50%; width: 66%; height: 66%; transform: translate(-50%, -50%); object-fit: contain; mix-blend-mode: normal !important; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.35)); }
+/* Bodoni's hairlines (the thin strokes of N and A) all but vanish at nameplate size: use the font's small-text optical
+   size, drawn with sturdier hairlines, wherever it's set in brass */
+body.style-infernal.cast-napoleonic .seat-info .name-label, body.style-infernal.cast-napoleonic .bid-token, body.style-infernal.cast-napoleonic .nap-word {
+  font-optical-sizing: none; font-variation-settings: "opsz" 9;
+}
