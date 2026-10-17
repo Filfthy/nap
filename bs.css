@@ -500,25 +500,16 @@ body.single-game #game-picker { display: none; }
 /* (the Empire and heart tables) messages keep a dark backing, as the bid panel does: over the pale inlay they'd vanish */
 body.table-empire .capture-toast.bs-toast { background: rgba(22, 9, 4, 0.82) !important; border-color: rgba(184, 137, 63, 0.7) !important; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6) !important; }
 /* ---------------------------------------------------------------- baize with the user's Napoleon-in-laurels emblem in the
-   middle (art/napoleon-inlay-baize.png, tools/make-baize-emblem.py): appliquéd felt ("crest") or gold thread ("gilt") */
+   middle (art/napoleon-inlay-baize.png, tools/make-baize-emblem.py): appliquéd felt ("crest") */
 body.table-green-crest { background: radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.18) 42%, rgba(0,0,0,0.72) 78%, rgba(0,0,0,0.88) 100%), url("img/baize-emblem-felt.webp") center 47% / auto 60vh no-repeat, url("baize.jpg"), #02180c !important; --ui-rgb: 3, 32, 18; --ui-accent: #1EC000; --ui-accent-rgb: 30, 192, 0; --ui-accent-hi: #23e000; --ui-soft: rgb(141, 255, 122); --ui-soft-rgb: 141, 255, 122; }
 html:has(body.table-green-crest) { background-color: #02180c; }
 .seg-tables .sw-green-crest { background: url("img/baize-emblem-felt.webp") center 30% / 150% no-repeat, url("baize.jpg") center / 200% !important; }
-body.table-green-gilt { background: radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.18) 42%, rgba(0,0,0,0.72) 78%, rgba(0,0,0,0.88) 100%), url("img/baize-emblem-gold.webp") center 47% / auto 60vh no-repeat, url("baize.jpg"), #02180c !important; --ui-rgb: 3, 32, 18; --ui-accent: #1EC000; --ui-accent-rgb: 30, 192, 0; --ui-accent-hi: #23e000; --ui-soft: rgb(141, 255, 122); --ui-soft-rgb: 141, 255, 122; }
-html:has(body.table-green-gilt) { background-color: #02180c; }
-.seg-tables .sw-green-gilt { background: url("img/baize-emblem-gold.webp") center 30% / 150% no-repeat, url("baize.jpg") center / 200% !important; }
 body.table-red-crest { background: radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.18) 42%, rgba(0,0,0,0.72) 78%, rgba(0,0,0,0.88) 100%), url("img/baize-emblem-felt.webp") center 47% / auto 60vh no-repeat, url("baize-red.jpg"), #2a0507 !important; --ui-rgb: 36, 6, 8; --ui-accent: #d8452e; --ui-accent-rgb: 216, 69, 46; --ui-accent-hi: #ee5f47; --ui-soft: rgb(255, 210, 130); --ui-soft-rgb: 255, 210, 130; }
 html:has(body.table-red-crest) { background-color: #2a0507; }
 .seg-tables .sw-red-crest { background: url("img/baize-emblem-felt.webp") center 30% / 150% no-repeat, url("baize-red.jpg") center / 200% !important; }
-body.table-red-gilt { background: radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.18) 42%, rgba(0,0,0,0.72) 78%, rgba(0,0,0,0.88) 100%), url("img/baize-emblem-gold.webp") center 47% / auto 60vh no-repeat, url("baize-red.jpg"), #2a0507 !important; --ui-rgb: 36, 6, 8; --ui-accent: #d8452e; --ui-accent-rgb: 216, 69, 46; --ui-accent-hi: #ee5f47; --ui-soft: rgb(255, 210, 130); --ui-soft-rgb: 255, 210, 130; }
-html:has(body.table-red-gilt) { background-color: #2a0507; }
-.seg-tables .sw-red-gilt { background: url("img/baize-emblem-gold.webp") center 30% / 150% no-repeat, url("baize-red.jpg") center / 200% !important; }
 body.table-blue-crest { background: radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.18) 42%, rgba(0,0,0,0.72) 78%, rgba(0,0,0,0.88) 100%), url("img/baize-emblem-felt.webp") center 47% / auto 60vh no-repeat, url("baize-blue.jpg"), #05102a !important; --ui-rgb: 6, 14, 38; --ui-accent: #4f7fe0; --ui-accent-rgb: 79, 127, 224; --ui-accent-hi: #6a96f2; --ui-soft: rgb(160, 196, 255); --ui-soft-rgb: 160, 196, 255; }
 html:has(body.table-blue-crest) { background-color: #05102a; }
 .seg-tables .sw-blue-crest { background: url("img/baize-emblem-felt.webp") center 30% / 150% no-repeat, url("baize-blue.jpg") center / 200% !important; }
-body.table-blue-gilt { background: radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.18) 42%, rgba(0,0,0,0.72) 78%, rgba(0,0,0,0.88) 100%), url("img/baize-emblem-gold.webp") center 47% / auto 60vh no-repeat, url("baize-blue.jpg"), #05102a !important; --ui-rgb: 6, 14, 38; --ui-accent: #4f7fe0; --ui-accent-rgb: 79, 127, 224; --ui-accent-hi: #6a96f2; --ui-soft: rgb(160, 196, 255); --ui-soft-rgb: 160, 196, 255; }
-html:has(body.table-blue-gilt) { background-color: #05102a; }
-.seg-tables .sw-blue-gilt { background: url("img/baize-emblem-gold.webp") center 30% / 150% no-repeat, url("baize-blue.jpg") center / 200% !important; }
 /* ...and printed into the cloth in cream ink, as on a casino table: a hard-light blend, so the weave shows through it */
 body.table-green-print { background: radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.18) 42%, rgba(0,0,0,0.72) 78%, rgba(0,0,0,0.88) 100%), url("img/baize-emblem-print-cream.webp") center 47% / auto 60vh no-repeat, url("baize.jpg"), #02180c !important; background-blend-mode: normal, hard-light, normal !important; --ui-rgb: 3, 32, 18; --ui-accent: #1EC000; --ui-accent-rgb: 30, 192, 0; --ui-accent-hi: #23e000; --ui-soft: rgb(141, 255, 122); --ui-soft-rgb: 141, 255, 122; }
 html:has(body.table-green-print) { background-color: #02180c; }
