@@ -18,7 +18,7 @@
   <meta property="og:description" content="Nap! The classic trick-taking game: bid to take two tricks, three, four, or all five - go Nap! - against Napoleon, Wellington, Nelson and the people of their age, or the Infernal cast. For 3 to 5 players.">
   <link rel="stylesheet" href="./gw.css?v=1">
   <link rel="stylesheet" href="./oh.css?v=4">
-  <link rel="stylesheet" href="./bs.css?v=80">
+  <link rel="stylesheet" href="./bs.css?v=81">
   <!-- the Infernal fonts load straight away, so nameplates are never drawn first in a stand-in font and then jump -->
   <link rel="preload" href="fonts/manufacturing-consent.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/cinzel.woff2" as="font" type="font/woff2" crossorigin>
@@ -282,6 +282,9 @@
             <label data-tip="Red baize with its emblem of Napoleon in laurels embroidered in gold thread"><input type="radio" name="table" value="red-gilt"><span class="sw sw-red-gilt">Red gilt</span></label>
             <label data-tip="Blue baize with its emblem of Napoleon in laurels appliquéd in black and white felt"><input type="radio" name="table" value="blue-crest"><span class="sw sw-blue-crest">Blue crest</span></label>
             <label data-tip="Blue baize with its emblem of Napoleon in laurels embroidered in gold thread"><input type="radio" name="table" value="blue-gilt"><span class="sw sw-blue-gilt">Blue gilt</span></label>
+            <label data-tip="Green baize with its emblem of Napoleon in laurels printed into the cloth"><input type="radio" name="table" value="green-print"><span class="sw sw-green-print">Green print</span></label>
+            <label data-tip="Red baize with its emblem of Napoleon in laurels printed into the cloth"><input type="radio" name="table" value="red-print"><span class="sw sw-red-print">Red print</span></label>
+            <label data-tip="Blue baize with its emblem of Napoleon in laurels printed into the cloth"><input type="radio" name="table" value="blue-print"><span class="sw sw-blue-print">Blue print</span></label>
             <label data-tip="Walnut table"><input type="radio" name="table" value="walnut"><span class="sw sw-walnut">Walnut</span></label>
             <label data-tip="Mahogany table"><input type="radio" name="table" value="mahogany"><span class="sw sw-mahogany">Mahogany</span></label>
             <label data-tip="Worn tavern table"><input type="radio" name="table" value="tavern"><span class="sw sw-tavern">Tavern</span></label>
@@ -384,7 +387,7 @@
   <script src="./games/nap.js?v=19"></script>
   <script src="./games/sergeant.js?v=3"></script>
   <script src="./games/registry.js?v=6"></script>
-  <script src="./bs-app.js?v=67"></script>
+  <script src="./bs-app.js?v=68"></script>
   <script>
     BVMore.init({ key: "black-spider", title: "Black Spider", others: ["oh-hell-extended", "drakeharbour", "german-whist", "artifact"],
       shareText: "Dodge the Black Spiders. Play Black Spider.",
