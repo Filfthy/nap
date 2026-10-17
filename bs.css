@@ -497,8 +497,6 @@ body.suits-infernal .card.classic-card:not(.plain-card) .ace-spade-svg { mix-ble
 /* a one-game release (dist/nap): no game picker; its own logo on the click-to-start screen */
 body.single-game #game-picker { display: none; }
 #splash .splash-game-logo { display: block; width: min(78vw, 46em); max-height: 52vh; height: auto; object-fit: contain; margin: 0 auto 0.2em; filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.7)); }
-/* (the Empire and heart tables) messages keep a dark backing, as the bid panel does: over the pale inlay they'd vanish */
-body.table-empire .capture-toast.bs-toast { background: rgba(22, 9, 4, 0.82) !important; border-color: rgba(184, 137, 63, 0.7) !important; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6) !important; }
 /* ---------------------------------------------------------------- baize with the user's Napoleon-in-laurels emblem
    (art/napoleon-inlay-baize.png, tools/make-baize-emblem.py) printed into the cloth in cream ink, as on a casino table:
    a hard-light blend, so the weave shows through it */
@@ -517,4 +515,12 @@ html:has(body.table-blue-print) { background-color: #05102a; }
    size, drawn with sturdier hairlines, wherever it's set in brass */
 body.style-infernal.cast-napoleonic .seat-info .name-label, body.style-infernal.cast-napoleonic .bid-token, body.style-infernal.cast-napoleonic .nap-word {
   font-optical-sizing: none; font-variation-settings: "opsz" 9;
+}
+/* messages (who won the bid, ...) look the same on every table: words on a see-through dark backing, no box or border,
+   edged dark so they read over anything */
+body .capture-toast.bs-toast, body[class*="table-"] .capture-toast.bs-toast {
+  background: rgba(8, 4, 2, 0.74) !important; border: none !important; border-radius: 12px !important;
+  box-shadow: 0 0 26px 12px rgba(8, 4, 2, 0.55) !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  text-shadow: 0 0 1px #000, 0 0 2px #000, 0 1px 3px #000;
 }
