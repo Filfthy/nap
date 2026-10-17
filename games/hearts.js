@@ -396,6 +396,7 @@ const HEARTS = (() => {
     9: [[pL, pT], [pR, pT], [pL, 40.3], [pR, 40.3], [pC, pM], [pL, 59.7], [pR, 59.7], [pL, pB], [pR, pB]],
     10: [[pL, pT], [pR, pT], [pC, 30.7], [pL, 40.3], [pR, 40.3], [pL, 59.7], [pR, 59.7], [pC, 69.3], [pL, pB], [pR, pB]],
   };
+  const NAP_ACE = "img/nap/ace-spades.webp?v=1";   // (the user's art/nap-ace-spades-ornate.png)
   class CardView {
     cardColorClass(card) { return COLOR_CLASS[card.suit] || ""; }
     crease(div, h) {
@@ -458,7 +459,7 @@ const HEARTS = (() => {
         } else if (/^[JQK]$/.test(rank)) {
           center.innerHTML = `<div class="royal-inset"><img class="royal-inset-img" src="court/${rank}${card.suit}.svg" alt="" draggable="false"></div>`;
         } else if (rank === "A") {
-          center.innerHTML = card.suit === "S" ? `<img class="ace-spade-svg" src="spade.svg" alt="" draggable="false">`
+          center.innerHTML = card.suit === "S" ? `<img class="ace-spade-svg${DECK_STYLE === "napoleonic" ? " nap-ace" : ""}" src="${DECK_STYLE === "napoleonic" ? NAP_ACE : "spade.svg"}" alt="" draggable="false">`
             : `<span class="std-pip std-ace" style="left:50%;top:50%">${SUIT_GLYPH[card.suit]}</span>`;
         } else {
           center.innerHTML = PIPS[card.rank].map(([x, y]) => `<span class="std-pip${y > 50 ? " flip" : ""}" style="left:${x}%;top:${y}%">${SUIT_GLYPH[card.suit]}</span>`).join("");
@@ -477,6 +478,10 @@ const HEARTS = (() => {
           img.src = `img/${courts}/${rank}-${STD_SUIT[card.suit]}.webp?v=3`; img.alt = ""; img.draggable = false;
           frame.appendChild(img); frame.appendChild(this.inkTop(img));
           center.appendChild(frame);
+        } else if (rank === "A" && card.suit === "S" && DECK_STYLE === "napoleonic") {
+          // the Napoleonic ace of spades: the ornate spade with Napoleon's golden bee
+          div.classList.remove("inf-ace");
+          center.innerHTML = `<img class="ace-spade-svg nap-ace" src="${NAP_ACE}" alt="" draggable="false">`;
         } else if (rank === "A") {
           div.classList.remove("inf-ace");
           center.innerHTML = `<span class="std-pip std-ace" style="left:52%;top:50%">${SUIT_GLYPH[card.suit]}</span>`;

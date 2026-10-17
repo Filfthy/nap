@@ -2686,7 +2686,7 @@ function preloadCardArt() {
   // web each is a separate download): first what the game and look in use need, then all the rest
   const STD = ["spades", "hearts", "diamonds", "clubs"], INF = ["pentagrams", "flames", "tridents", "horns"], SL = ["S", "H", "D", "C"];
   const sets = {
-    nap: () => ["J", "Q", "K"].flatMap(r => STD.map(s => `img/nap/${r}-${s}.webp?v=3`)).concat([0, 1, 2, 3, 4, 5, 6, 7].map(i => `img/parchment-card-kept-${i}.webp`)),
+    nap: () => ["img/nap/ace-spades.webp?v=1"].concat(["J", "Q", "K"].flatMap(r => STD.map(s => `img/nap/${r}-${s}.webp?v=3`))).concat([0, 1, 2, 3, 4, 5, 6, 7].map(i => `img/parchment-card-kept-${i}.webp`)),
     painted: () => ["J", "Q", "K"].flatMap(r => STD.map(s => `img/std/${r}-${s}.webp?v=3`)),
     standard: () => ["J", "Q", "K"].flatMap(r => SL.map(s => `court/${r}${s}.svg`)).concat(["spade.svg"]),
     infernal: () => ["A", "J", "Q", "K"].flatMap(r => INF.map(s => `img/inf-${r}-${s}.webp`))
