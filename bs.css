@@ -332,6 +332,14 @@ body.table-empire #end-panel, body.table-empire .scorecard-panel { background: r
 /* Nap: the bid panel sits low and compact, in the gap above your hand, clear of the middle of the table (where the
    Empire table's portrait is) */
 body.game-nap #bid-panel { top: 63.5% !important; padding: 4px 14px !important; gap: 4px !important; }
+/* phones: the bid strip clear of your hand's top edge, the contract line small enough to stay in its corner (a long
+   name wraps), bigger corner indices on the cards played to the table, and bigger opponents */
+@media (max-height: 520px) {
+  body.game-nap #bid-panel { top: 52% !important; }
+  body .trump-mark .nap-contract { font-size: 0.95em; white-space: normal; max-width: 7.5em; margin-left: auto; margin-right: auto; line-height: 1.05; text-align: center; }
+  body.suits-infernal:not(.faces-large) #trick-area .card:not(.back) .corner:not(.bottom) { font-size: 35cqw; width: 32cqw; }
+  body.style-infernal .seat .seat-info .name-label .portrait { width: calc(84px * var(--card-scale) * var(--pk, 1) * 1.35); }
+}
 body.game-nap #bid-panel #bid-title { font-size: calc(17px * var(--card-scale)); }
 body.game-nap #bid-panel #bid-note:empty { display: none; }
 body.game-nap #bid-buttons .bid-btn.bid-word { padding-top: 0.15em; padding-bottom: 0.15em; min-height: 0; }
