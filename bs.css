@@ -339,6 +339,14 @@ body.game-nap #bid-panel { top: 63.5% !important; padding: 4px 14px !important; 
   body .trump-mark .nap-contract { font-size: 0.95em; white-space: normal; max-width: 7.5em; margin-left: auto; margin-right: auto; line-height: 1.05; text-align: center; }
   body.suits-infernal:not(.faces-large) #trick-area .card:not(.back) .corner:not(.bottom) { font-size: 35cqw; width: 32cqw; }
   body.style-infernal .seat .seat-info .name-label .portrait { width: calc(84px * var(--card-scale) * var(--pk, 1) * 1.35); }
+  /* the final results: in the middle of the screen, at a size you can read, not squeezed into the menu's column */
+  #start-overlay #start-panel.results-open { margin: auto !important; font-size: 13px !important; width: min(30em, 88vw) !important; max-width: none !important; max-height: 94vh !important; overflow-y: auto; }
+  #start-panel.results-open .game-logo, #start-panel.results-open .start-title-img { max-height: 4.2em !important; width: auto !important; }
+  #start-panel.results-open #results-panel .results-content { gap: 0.35em; padding-top: 0.3em; padding-bottom: 0.6em; }
+  #start-panel.results-open #results-panel #results-winner { font-size: 2.1em; }
+  #start-panel.results-open #results-panel #results-match-table { width: 100%; max-width: none; margin: 0.2em 0; }
+  #start-panel.results-open #results-panel #results-match-table th, #start-panel.results-open #results-panel #results-match-table td { padding: 0.22em 0.5em; }
+  #start-panel.results-open .game-subtitle { display: none; }
 }
 body.game-nap #bid-panel #bid-title { font-size: calc(17px * var(--card-scale)); }
 body.game-nap #bid-panel #bid-note:empty { display: none; }

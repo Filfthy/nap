@@ -259,14 +259,17 @@ class GameController {
     try { c = localStorage.getItem("it_cast_" + id); } catch (e) { /* ignore */ }
     return CASTS[c] ? c : (GAMES[id] && GAMES[id].defaultCast) || "infernal";
   }
+  // (each cast keeps its own seating, so switching cast and back finds your choices as you left them; it_seats_<game>
+  // was the one seating before that)
   seatPicksFor(id) {
+    const cast = this.castFor(id);
     let p = [];
-    try { p = JSON.parse(localStorage.getItem("it_seats_" + id) || "[]"); } catch (e) { /* ignore */ }
-    const names = CASTS[this.castFor(id)].names;
+    try { p = JSON.parse(localStorage.getItem(`it_seats_${id}_${cast}`) || localStorage.getItem("it_seats_" + id) || "[]"); } catch (e) { /* ignore */ }
+    const names = CASTS[cast].names;
     return [0, 1, 2, 3].map(i => (Array.isArray(p) && names.includes(p[i])) ? p[i] : null);
   }
   setSeatPicks(id, picks) {
-    try { localStorage.setItem("it_seats_" + id, JSON.stringify(picks)); } catch (e) { /* ignore */ }
+    try { localStorage.setItem(`it_seats_${id}_${this.castFor(id)}`, JSON.stringify(picks)); } catch (e) { /* ignore */ }
   }
 
   seatPos(seat) {
@@ -2034,9 +2037,10 @@ class GameController {
     };
     let picker = null;
     const closePicker = () => { if (picker) { picker.remove(); picker = null; } };
-    const reseat = () => {          // the table behind the menu shows the opponents as they'll be seated
-      this.pickOpponents();
-      if (this.game.phase === "idle") { this.buildSeats(); this.render(); }
+    const reseat = () => {          // the table behind the menu shows the opponents as they'll be seated (mid-game too:
+      if (this.tut) return;         // they take over the seats, each seat keeping its counters and tricks; not in
+      this.pickOpponents();         // the tutorial, whose opponents are its own)
+      this.buildSeats(); this.render();
     };
     const showSeats = () => {
       if (!seatBox) return;
@@ -2100,7 +2104,7 @@ class GameController {
     // ---- Themes: a whole look in one click (cast, style, table and back, remembered for the game as each row is); any
     // other mix is Custom. And the preview in the left column while Look & feel is open: what you're getting ----
     const THEMES = {
-      infernal: { cast: "infernal", deckstyle: "infernal", table: "cave", cardback: "infernal" },
+      infernal: { cast: "infernal", deckstyle: "infernal", table: "souls", cardback: "infernal" },
       napoleonic: { cast: "napoleonic", deckstyle: "napoleonic", table: "empire", cardback: "imperial-green" },
       classic: { cast: "infernal", deckstyle: "standard", table: "green", cardback: "classic-blue" },
     };
@@ -2109,7 +2113,7 @@ class GameController {
     // (a theme as it applies to this game: Black Spider keeps its own back, and has no deck Style - its cards are its own)
     const themeFor = k => {
       const t = Object.assign({}, THEMES[k]);
-      if (!this.mod.std) { delete t.deckstyle; if (k === "infernal") t.cardback = "spider"; }
+      if (!this.mod.std) { delete t.deckstyle; if (k === "infernal") { t.cardback = "spider"; t.table = "cave"; } }
       return t;
     };
     const showTheme = () => {
