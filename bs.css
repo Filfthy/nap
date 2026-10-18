@@ -329,6 +329,9 @@ body.table-empire #end-panel, body.table-empire .scorecard-panel { background: r
 .seg-tables label { flex: 0 0 calc((100% - 3 * 0.3em) / 4) !important; }
 .seg-tables .sw { padding-left: 0.2em !important; padding-right: 0.2em !important; white-space: nowrap; }
 .credits { font-size: 0.9em; opacity: 0.85; }
+/* the cards played to the table lie on top of the players' nameplates and portraits, never under them (seats are 50;
+   your own plate and hand, 310, stay above) */
+#trick-area { z-index: 60; }
 
 /* Nap: the bid panel sits low and compact, in the gap above your hand, clear of the middle of the table (where the
    Empire table's portrait is) */
