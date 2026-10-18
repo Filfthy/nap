@@ -333,11 +333,10 @@ body.table-empire #end-panel, body.table-empire .scorecard-panel { background: r
 /* Nap: the bid panel sits low and compact, in the gap above your hand, clear of the middle of the table (where the
    Empire table's portrait is) */
 body.game-nap #bid-panel { top: 63.5% !important; padding: 4px 14px !important; gap: 4px !important; }
-/* phones: the bid strip clear of your hand's top edge, the contract line small enough to stay in its corner (a long
-   name wraps), bigger corner indices on the cards played to the table, and bigger opponents */
+/* phones: the bid strip clear of your hand's top edge, the contract line small enough to stay in its corner, bigger corner indices on the cards played to the table, and bigger opponents */
 @media (max-height: 520px) {
   body.game-nap #bid-panel { top: 52% !important; }
-  body .trump-mark .nap-contract { font-size: 0.95em; white-space: normal; max-width: 7.5em; margin-left: auto; margin-right: auto; line-height: 1.05; text-align: center; }
+  body .trump-mark .nap-contract { font-size: 0.95em; }
   body.suits-infernal:not(.faces-large) #trick-area .card:not(.back) .corner:not(.bottom) { font-size: 35cqw; width: 32cqw; }
   body.style-infernal .seat .seat-info .name-label .portrait { width: calc(84px * var(--card-scale) * var(--pk, 1) * 1.35); }
   /* the final results: in the middle of the screen, at a size you can read, not squeezed into the menu's column */
@@ -461,6 +460,8 @@ body.style-infernal.cast-napoleonic .nap-word {
 body.style-infernal.cast-napoleonic .nap-word.on-target { box-shadow: inset 0 1px 0 #fff6cf, inset 0 -1px 0 #7a5512, 0 0 9px rgba(255, 214, 120, 0.95); }
 /* (Nap) the trump panel: the contract (who bid what) on a line above the trump suit */
 .trump-mark .nap-contract { display: block; font: italic 600 1.3em "Cormorant Garamond", Georgia, serif; letter-spacing: 0.02em; white-space: nowrap; margin-bottom: 0.15em; opacity: 0.9; }
+/* (the declarer's name on one line, the bid under it, so it stays narrow and clear of the seat beside it) */
+.pass-dir.trump-mark .nap-contract span { display: block; font-size: 1em; line-height: 1.05; text-align: center; }
 /* the Standard style on parchment: the classic courts printed into the paper, the indices without the parchment glow */
 body.suits-infernal .card.classic-card:not(.plain-card) .royal-inset { border-color: rgba(60, 35, 15, 0.45); }
 body.suits-infernal .card.classic-card:not(.plain-card) .royal-inset-img { mix-blend-mode: multiply; }

@@ -502,7 +502,7 @@ const NAP = (() => {
     return you ? `You won the bid: ${what}. Lead a card - its suit is trumps.`
       : `${who} won the bid: ${what}, playing alone against the rest of you.`;
   };
-  const contractLine = (g, name) => g.declarer == null ? "" : `<i class="nap-contract">${name(g.declarer)}: ${bidLabel(g.contract)}</i>`;
+  const contractLine = (g, name) => g.declarer == null ? "" : `<i class="nap-contract"><span>${name(g.declarer)}</span><span>${bidLabel(g.contract)}</span></i>`;
   const marker = (g, name = s => "") => g.phase === "play" || g.phase === "roundEnd"
     ? (g.contract === MIS ? { html: `${contractLine(g, name)}<span>∅</span><b>none</b>`, caption: "Trumps", tip: "Misère: no trumps" }
       : g.trump ? { html: `${contractLine(g, name)}<span>${mark(g.trump)}</span><b>${SUIT_WORD[g.trump]}</b>`, caption: "Trumps", tip: `${SUIT_WORD[g.trump][0].toUpperCase() + SUIT_WORD[g.trump].slice(1)} are trumps this hand` }
