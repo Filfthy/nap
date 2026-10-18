@@ -233,17 +233,23 @@ class GameController {
   // Each game: opponents from the game's cast (Infernal or Napoleonic) - the ones you seated (Game tab, Seats), and
   // the rest drawn at random.
   pickOpponents() {
-    const names = CASTS[this.castFor(this.gameId)].names;
+    const cast = this.castFor(this.gameId), names = CASTS[cast].names;
     const picks = this.seatPicksFor(this.gameId);
-    const pool = names.filter(n => !picks.includes(n));
+    // within a game each cast keeps the opponents it drew, so switching cast and back brings the same ones back to the
+    // same seats (startGame clears this for a fresh draw)
+    this.castDraws = this.castDraws || {};
+    const key = this.gameId + ":" + cast, prev = this.castDraws[key] || [];
+    const keep = [0, 1, 2, 3].map(i => !picks[i] && prev[i] && !picks.includes(prev[i]) ? prev[i] : null);
+    const pool = names.filter(n => !picks.includes(n) && !keep.includes(n));
     for (let i = pool.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [pool[i], pool[j]] = [pool[j], pool[i]];
     }
     // the seats you chose keep their opponent; the rest are filled at random
     const out = [];
-    for (let i = 0; i < 4 || pool.length; i++) out.push(picks[i] || pool.shift());
+    for (let i = 0; i < 4 || pool.length; i++) out.push(picks[i] || keep[i] || pool.shift());
     this.opponentNames = out.filter(Boolean);
+    this.castDraws[key] = this.opponentNames.slice(0, 4);
     // the Napoleonic cast sits behind brass nameplates (bs.css: body.cast-napoleonic)
     document.body.classList.toggle("cast-napoleonic", this.castFor(this.gameId) === "napoleonic");
     // index.html?demo (for recording videos): always the same three opponents, left to right
@@ -755,6 +761,7 @@ class GameController {
     this.playedEndJingle = false;
     this.hideBidPanel();
     this.hideRoundSummary();
+    this.castDraws = {};
     this.pickOpponents();
     if (this.playersChoice === "random") this.numPlayers = 3 + Math.floor(Math.random() * 3);
     if (!this.mod.players.includes(this.numPlayers)) this.numPlayers = this.mod.players[Math.floor(Math.random() * this.mod.players.length)];
