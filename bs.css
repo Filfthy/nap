@@ -334,6 +334,14 @@ body.table-empire #end-panel, body.table-empire .scorecard-panel { background: r
 /* the cards played to the table lie on top of the players' nameplates and portraits, never under them (seats are 50;
    your own plate and hand, 310, stay above) */
 #trick-area { z-index: 60; }
+/* the end-of-game request for a rating (standalone release only): one quiet line under the results, the link a small button */
+#results-rate { font: italic 1em "Cormorant Garamond", Georgia, serif; color: rgba(241, 220, 174, 0.85); text-align: center; line-height: 1.5; }
+#results-rate a { display: inline-block; margin-left: 0.4em; padding: 0.1em 0.8em; border: 1px solid #b8893f; border-radius: 6px; color: #ffd27a;
+  font-style: normal; font-weight: 700; text-decoration: none; background: rgba(184, 137, 63, 0.15); white-space: nowrap; }
+#results-rate a:hover { background: rgba(184, 137, 63, 0.32); }
+/* the results screen: the logo smaller, without the line about the game, so the results and Close always fit */
+#start-panel.results-open .game-logo { max-height: 11em; width: auto; }
+#start-panel.results-open .it-game-tag { display: none; }
 
 /* Nap: the bid panel sits low and compact, in the gap above your hand, clear of the middle of the table (where the
    Empire table's portrait is) */
@@ -352,6 +360,7 @@ body.game-nap #bid-panel { top: 63.5% !important; padding: 4px 14px !important; 
   #start-panel.results-open #results-panel #results-match-table { width: 100%; max-width: none; margin: 0.2em 0; }
   #start-panel.results-open #results-panel #results-match-table th, #start-panel.results-open #results-panel #results-match-table td { padding: 0.22em 0.5em; }
   #start-panel.results-open .game-subtitle { display: none; }
+  #results-rate { font-size: 0.9em; line-height: 1.3; }
 }
 body.game-nap #bid-panel #bid-title { font-size: calc(17px * var(--card-scale)); }
 body.game-nap #bid-panel #bid-note:empty { display: none; }

@@ -18,7 +18,7 @@
   <meta property="og:description" content="Nap! The classic trick-taking game: bid to take two tricks, three, four, or all five - go Nap! - against Napoleon, Wellington, Nelson and the people of their age, or the Infernal cast. For 3 to 5 players.">
   <link rel="stylesheet" href="./gw.css?v=1">
   <link rel="stylesheet" href="./oh.css?v=4">
-  <link rel="stylesheet" href="./bs.css?v=96">
+  <link rel="stylesheet" href="./bs.css?v=98">
   <!-- the Infernal fonts load straight away, so nameplates are never drawn first in a stand-in font and then jump -->
   <link rel="preload" href="fonts/manufacturing-consent.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/cinzel.woff2" as="font" type="font/woff2" crossorigin>
@@ -332,6 +332,7 @@
         <h2 id="results-winner"></h2>
         <div id="results-subtitle"></div>
         <div id="results-match-table" style="display:none;"></div>
+        <div id="results-rate" style="display:none;">Enjoyed it? A rating on itch.io helps other players find it. <a id="results-rate-link" target="_blank" rel="noopener">Rate it</a></div>
         <div class="results-buttons">
           <button id="btn-close-results">Close</button>
         </div>
@@ -378,10 +379,10 @@
   <script src="./games/suits.js?v=6"></script>
   <script src="./games/hearts.js?v=14"></script>
   <script src="./games/spades.js?v=2"></script>
-  <script src="./games/nap.js?v=21"></script>
+  <script src="./games/nap.js?v=22"></script>
   <script src="./games/sergeant.js?v=3"></script>
   <script src="./games/registry.js?v=6"></script>
-  <script src="./bs-app.js?v=73"></script>
+  <script src="./bs-app.js?v=74"></script>
   <script>
     BVMore.init({ key: "black-spider", title: "Black Spider", others: ["oh-hell-extended", "drakeharbour", "german-whist", "artifact"],
       shareText: "Dodge the Black Spiders. Play Black Spider.",

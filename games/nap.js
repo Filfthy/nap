@@ -613,6 +613,7 @@ const NAP = (() => {
   };
 
   return { id: "nap", name: "Nap", titleLogo: "img/logo-nap.webp?v=1", subtitle: "The classic trick-taking game",
+    rateUrl: "https://bug-victim.itch.io/nap-classic-card-game",   // (the standalone release asks for a rating at the end of a game)
     defaultCast: "napoleonic", defaultStyle: "napoleonic",   // (its opponents: the Napoleonic cast, art/nap-cast/ - see CASTS in bs-app.js)
     std: true, defaultTable: "empire", defaultBack: "imperial-green", tagline: "Bid against the table: two tricks, three, four - or all five", players: [3, 4, 5], logo: null, storage: "nap",
     DEFAULT_RULES, cleanRules, Game, AI, CardView: HEARTS.CardView, tutorial, bidResult, code, parse, cardName, shortName, sortCards,

@@ -1818,6 +1818,20 @@ class GameController {
     table += `</tbody></table>`;
     resultsTable.innerHTML = table;
     resultsTable.style.display = "block";
+    // the standalone release asks, quietly, for a rating on its itch page - only after a whole game, and never again
+    // once you've followed the link
+    const rate = document.getElementById("results-rate"), rateLink = document.getElementById("results-rate-link");
+    if (rate && rateLink) {
+      let rated = false;
+      try { rated = localStorage.getItem("it_rated_" + this.gameId) === "1"; } catch (e) { /* ignore */ }
+      const ask = typeof SINGLE_GAME !== "undefined" && this.mod.rateUrl && !rated && !this.tut;
+      rate.style.display = ask ? "block" : "none";
+      if (ask) {
+        rateLink.href = this.mod.rateUrl;
+        rateLink.textContent = `Rate ${this.mod.titleName || this.mod.name + "!"}`;
+        rateLink.onclick = () => { try { localStorage.setItem("it_rated_" + this.gameId, "1"); } catch (e) { /* ignore */ } setTimeout(() => { rate.style.display = "none"; }, 300); };
+      }
+    }
     if (!this.playedEndJingle) { this.playedEndJingle = true; this.playEndArpeggio({ outcome: playerWon ? "win" : "lose" }); }
     overlay.style.display = "flex";
     this.overlayActive = true;
