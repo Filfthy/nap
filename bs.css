@@ -229,6 +229,8 @@ body.suit-colours-2 .card.std-card .s-club { color: #1a120c; }
 body.suits-infernal .card.plain-card:not(.back) { background: #fdfcf8; border-color: #b9b4aa; }
 body.suits-infernal .card.plain-card:not(.back) .corner { text-shadow: none; }
 .card.classic-card .corner { font-family: Georgia, "Times New Roman", Times, serif; font-weight: 700; }
+/* (the letters too: the Infernal index face, Cinzel, has a Q whose long tail sweeps into the court picture) */
+body.suits-infernal .card.classic-card:not(.back) .corner .rank { font-family: Georgia, "Times New Roman", Times, serif; font-weight: 700; font-size: 1.05em; letter-spacing: -0.02em; }
 .card.classic-card .s-heart, body.suit-colours-2 .card.classic-card .s-diamond { color: #c8102e; }
 .card.classic-card .s-spade, body.suit-colours-2 .card.classic-card .s-club { color: #111; }
 .card.classic-card .royal-inset { position: absolute; inset: 13% 17.3%; border: 1px solid rgba(0, 0, 0, 0.35); border-radius: 2px; overflow: hidden; }
