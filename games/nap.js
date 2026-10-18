@@ -232,7 +232,10 @@ const NAP = (() => {
   //   defenders: gang up - beat the declarer's card as cheaply as they can, play low when a fellow defender is
   //              already winning; against Misère, lead low and play under the declarer when they can
   //   hard: tries each card and plays the hand out many times with guessed hands (fitting the suits they've shown
-  //         they lack), counting the result for itself
+  //         they lack, and the auction), counting the result for itself
+  //   medium and hard bid by simulation (simBid, below): the unseen cards dealt out many times to fit the auction, each
+  //         deal played out with good sense, giving the chance of making each bid - and they bid whatever is worth most
+  //         counters on average (tools/nap-ai/lab.js measured it: about a counter a deal better than bidding by rules)
   function estimate(hand, trump) {
     const by = s => hand.filter(c => c.suit === s).sort((a, b) => b.rank - a.rank);
     const tr = by(trump);
@@ -302,21 +305,117 @@ const NAP = (() => {
     return cheap(losing);
   }
   function tableInfo(g) {
-    const gone = new Set([...g.playedCards, ...g.currentTrick.plays.map(p => p.card)].map(code));
+    const cur = g.currentTrick ? g.currentTrick.plays : [];          // (no trick yet during the auction)
+    const gone = new Set([...g.playedCards, ...cur.map(p => p.card)].map(code));
     const top = {}; for (const s of SUITS) { let r = 14; while (r >= 2 && gone.has(s + r)) r--; top[s] = r; }
     const v = [...Array(g.numPlayers)].map(() => new Set());
-    const tricks = g.trickHistory.concat(g.currentTrick.plays.length ? [{ plays: g.currentTrick.plays }] : []);
+    const tricks = g.trickHistory.concat(cur.length ? [{ plays: cur }] : []);
     for (const t of tricks) { const lead = t.plays[0].card; for (const p of t.plays.slice(1)) if (p.card.suit !== lead.suit) v[p.who].add(lead.suit); }
     let trumpsOut = 0;
     if (g.trump) for (let r = 2; r <= 14; r++) if (!gone.has(g.trump + r)) trumpsOut++;
     return { top, void: v, trumpsOut };
   }
+  // ---- guessing the hidden hands (for the hard player's look-ahead and the simulated bidding)
+  // what each seat held at the start (its cards now and those it has played); would a player holding those have bid as
+  // this seat did? (the auction replayed with the rules-of-thumb bidder: a guide to what a bid says about a hand)
+  function playedBy(g) {
+    const p = [...Array(g.numPlayers)].map(() => []);
+    for (const t of g.trickHistory) for (const x of t.plays) p[x.who].push(x.card);
+    if (g.currentTrick) for (const x of g.currentTrick.plays) p[x.who].push(x.card);
+    return p;
+  }
+  function bidFits(g, seat, cards) {
+    const r = g.rules, bid = g.bids[seat];
+    if (bid == null) return true;
+    let hi = PASS, s = g.nextSeat(g.dealer);
+    for (let k = 0; k < g.numPlayers && s !== seat; k++) { const b = g.bids[s]; if (b != null && b > hi) hi = b; s = g.nextSeat(s); }
+    const legal = [PASS];
+    for (let x = r.minBid; x <= 4; x++) if (x > hi) legal.push(x);
+    if (r.misere && MIS > hi) legal.push(MIS);
+    if (NAPB > hi) legal.push(NAPB);
+    legal.sort((x, y) => x - y);
+    const want = chooseBid(cards, legal, "medium", g.activeCount, 0);
+    // a pass says "not enough to bid"; a bid says "about this strong" (a bid either side of it will do)
+    if (bid === PASS) return want === PASS;
+    return want !== PASS && Math.abs(Math.min(want, 5) - Math.min(bid, 5)) <= 1;
+  }
+  // the unseen cards dealt to the others: none of a suit a player has shown out of, and (if it can be managed) the way
+  // they bid
+  function guessHands(g, me, infer = true, tries = 300) {
+    const seen = new Set([...g.playedCards, ...(g.currentTrick ? g.currentTrick.plays.map(p => p.card) : []), ...g.hands[me].cards].map(code));
+    const unseen = createDeck().filter(c => !seen.has(code(c)));
+    const counts = g.hands.map(h => h.cards.length), v = tableInfo(g).void, pl = playedBy(g);
+    const order = [...Array(g.numPlayers).keys()].filter(s => s !== me && counts[s]).sort((a, b) => v[b].size - v[a].size);
+    let fallback = null;
+    for (let t = 0; t < (infer ? tries : 50); t++) {
+      const pool = shuffle(unseen.slice()), hands = counts.map((c, s) => s === me ? g.hands[me].cards.slice() : []);
+      let ok = true;
+      for (const s of order) {
+        for (let i = pool.length - 1; i >= 0 && hands[s].length < counts[s]; i--) if (!v[s].has(pool[i].suit)) hands[s].push(pool.splice(i, 1)[0]);
+        if (hands[s].length < counts[s]) { ok = false; break; }
+      }
+      if (!ok) continue;
+      if (!fallback) fallback = hands;
+      if (!infer || order.every(s => bidFits(g, s, hands[s].concat(pl[s])))) return hands;
+    }
+    if (fallback) return fallback;
+    const pool = shuffle(unseen.slice());
+    return counts.map((c, s) => s === me ? g.hands[me].cards.slice() : pool.splice(0, c));
+  }
+  // one deal played out from the first lead with good sense; the tricks the declarer takes
+  function simRound(g, handsIn, decl, contract) {
+    const n = g.numPlayers, hands = handsIn.map(h => h.slice());
+    const sim = { numPlayers: n, declarer: decl, contract, trump: null, playedCards: [], trickHistory: [], currentTrick: { plays: [] }, tricksPlayed: 0 };
+    let turn = decl, won = 0;
+    for (let t = 0; t < 5; t++) {
+      for (let k = 0; k < g.activeCount; k++) {
+        const hand = hands[turn], legal = legalIndices(hand, sim.currentTrick.plays);
+        const i = legal.length === 1 ? legal[0] : choosePlay(hand, legal, sim, turn, tableInfo(sim));
+        const card = hand.splice(i, 1)[0];
+        if (t === 0 && k === 0 && contract !== MIS) sim.trump = card.suit;
+        sim.currentTrick.plays.push({ who: turn, card });
+        turn = g.nextSeat(turn);
+      }
+      const ps = sim.currentTrick.plays, w = ps[winnerIndex(ps.map(p => p.card), sim.trump)].who;
+      if (w === decl) won++;
+      sim.trickHistory.push({ plays: ps }); ps.forEach(p => sim.playedCards.push(p.card));
+      sim.currentTrick = { plays: [] }; sim.tricksPlayed++; turn = w;
+    }
+    return won;
+  }
+  // the bid worth most counters on average: each bid's chance from K guessed deals, played out once as a trick contract
+  // (the tricks it takes) and once as Misère (if Misère may be bid); passing is worth nothing
+  function simBid(g, seat, legal, K) {
+    if (legal.length === 1) return legal[0];
+    const opp = g.activeCount - 1, tricks = new Array(6).fill(0), wantMis = legal.includes(MIS);
+    let misOk = 0;
+    for (let k = 0; k < K; k++) {
+      const hands = guessHands(g, seat, true, 60);
+      tricks[simRound(g, hands, seat, 4)]++;
+      if (wantMis && simRound(g, hands, seat, MIS) === 0) misOk++;
+    }
+    const chance = b => b === MIS ? misOk / K : tricks.slice(tricksNeeded(b)).reduce((a, x) => a + x, 0) / K;
+    const pool = g.rules.pool ? g.pool : 0;
+    let best = PASS, bestEV = 0;
+    for (const b of legal) {
+      if (b === PASS) continue;
+      const p = chance(b), [w, l] = stakes(b);
+      const ev = opp * (p * w - (1 - p) * l) + (b >= NAPB ? p * pool : 0);
+      if (best === PASS && !legal.includes(PASS) ? true : ev > bestEV) { bestEV = ev; best = b; }
+    }
+    return best;
+  }
+
   class AI {
     constructor({ difficulty = "medium" } = {}) { this.difficulty = difficulty; }
     setDifficulty(d) { this.difficulty = d; }
     resetMemory() {}
     choosePass() { return [0, 1, 2]; }
-    chooseBid(ctx) { return chooseBid(ctx.hand, ctx.legalBids, this.difficulty, ctx.game ? ctx.game.activeCount : ctx.numPlayers, ctx.game && ctx.game.rules.pool ? ctx.game.pool : 0); }
+    chooseBid(ctx) {
+      const g = ctx.game;
+      if (g && this.difficulty !== "easy" && ctx.seat != null) return simBid(g, ctx.seat, ctx.legalBids, this.difficulty === "hard" ? 100 : 30);
+      return chooseBid(ctx.hand, ctx.legalBids, this.difficulty, g ? g.activeCount : ctx.numPlayers, g && g.rules.pool ? g.pool : 0);
+    }
     choosePlay(ctx) {
       if (ctx.legal.length === 1) return ctx.legal[0];
       const g = ctx.game;
@@ -326,16 +425,9 @@ const NAP = (() => {
     }
     // the hard player: each card it may play, the rest of the hand played out 120 times with guessed hands
     lookAhead(ctx) {
-      const g = ctx.game, me = ctx.seat, n = g.numPlayers;
-      const seen = new Set([...g.playedCards, ...g.currentTrick.plays.map(p => p.card), ...g.hands[me].cards].map(code));
-      const unseen = createDeck().filter(c => !seen.has(code(c)));
-      const counts = g.hands.map(h => h.cards.length), info = tableInfo(g), score = new Map(ctx.legal.map(i => [i, 0]));
+      const g = ctx.game, me = ctx.seat, score = new Map(ctx.legal.map(i => [i, 0]));
       for (let k = 0; k < 120; k++) {
-        const pool = shuffle(unseen.slice()), hands = counts.map((c, s) => s === me ? g.hands[me].cards.slice() : []);
-        for (let s = 0; s < n; s++) if (s !== me && counts[s]) {
-          for (let i = pool.length - 1; i >= 0 && hands[s].length < counts[s]; i--) if (!info.void[s].has(pool[i].suit)) hands[s].push(pool.splice(i, 1)[0]);
-          while (hands[s].length < counts[s] && pool.length) hands[s].push(pool.pop());
-        }
+        const hands = guessHands(g, me, true, 25);     // (a few tries at fitting the auction: it has to be quick)
         for (const i of ctx.legal) score.set(i, score.get(i) + this.playOut(g, hands, me, i));
       }
       let best = ctx.legal[0];
