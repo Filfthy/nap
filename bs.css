@@ -224,8 +224,9 @@ body.suit-colours-2 .card.std-card .s-club { color: #1a120c; }
 .card.std-card .std-pip.std-ace { font-size: 62cqw; }
 .card.std-card .face-icon { pointer-events: none; }
 /* With a white back (BugVictim, Classic) the standard suits are a clean white card as in any ordinary pack (the Goodall courts from court/, both indices, the
-   ornate ace of spades); the parchment, wear and creases are left off */
-body.suits-infernal .card.plain-card:not(.back) { background: #fdfcf8; border-color: #b9b4aa; isolation: auto; }
+   ornate ace of spades); the parchment, wear and creases are left off. (Each card stays its own layer, so its lower
+   index can't show through the card overlapping it in a fan.) */
+body.suits-infernal .card.plain-card:not(.back) { background: #fdfcf8; border-color: #b9b4aa; }
 body.suits-infernal .card.plain-card:not(.back) .corner { text-shadow: none; }
 .card.classic-card .corner { font-family: Georgia, "Times New Roman", Times, serif; font-weight: 700; }
 .card.classic-card .s-heart, body.suit-colours-2 .card.classic-card .s-diamond { color: #c8102e; }
